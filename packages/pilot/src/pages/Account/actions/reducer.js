@@ -12,6 +12,7 @@ import {
   LOGIN_REQUEST,
   LOGOUT_REQUEST,
   RECIPIENT_BALANCE_RECEIVE,
+  RESET_STATE,
 } from '.'
 
 const getBalance = applySpec({
@@ -72,7 +73,8 @@ export default function loginReducer (state = initialState, action) {
       )
     }
 
-    case LOGOUT_REQUEST: {
+    case LOGOUT_REQUEST:
+    case RESET_STATE: {
       return initialState
     }
 

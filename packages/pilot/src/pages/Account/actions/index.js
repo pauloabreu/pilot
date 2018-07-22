@@ -9,6 +9,9 @@ export const requestLogin = createAction(LOGIN_REQUEST)
 export const LOGOUT_REQUEST = 'pilot/account/LOGOUT_REQUEST'
 export const requestLogout = createAction(LOGOUT_REQUEST)
 
+export const RESET_STATE = 'pilot/account/RESET_STATE'
+export const resetState = createAction(RESET_STATE)
+
 export const LOGIN_RECEIVE = 'pilot/account/LOGIN_RECEIVE'
 export const receiveLogin = createAction(LOGIN_RECEIVE)
 
