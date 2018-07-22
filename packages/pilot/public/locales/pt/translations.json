@@ -112,10 +112,10 @@
     "isPhone": "Não é um telefone válido"
   },
   "password_recovery": {
-    "confirmation": "em instantes você receberá um e-mail com as instruções para a redefinição de sua senha",
-    "confirmation_emphasis": "pronto",
-    "recovery_call": "Digite o e-mail cadastrado para recuperar sua senha",
-    "recovery_action": "enviar"
+    "confirmation": "Em instantes você receberá um e-mail com as instruções para a redefinição de sua senha.",
+    "confirmation_emphasis": "Pronto!",
+    "recovery_call": "Digite o e-mail cadastrado para recuperar sua senha.",
+    "recovery_action": "Enviar"
   },
   "recipients": {
     "account": "C: {{number}}",
@@ -133,6 +133,7 @@
     "company": "Empresa",
     "confirmation": "você receberá um e-mail com as instruções para a ativação de sua conta",
     "confirmation_emphasis": "pronto!",
+    "invalid_email": "e-mail inválido",
     "invalid_email_emphasis": "e-mail de cadastro inválido.",
     "invalid_email_error": "Para mais informações entre em contato com o administrador da sua conta.",
     "login_action": "faça login",
