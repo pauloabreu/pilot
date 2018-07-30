@@ -141,6 +141,10 @@
   }
 }
 
+.primaryContent .signIn {
+  padding-bottom: var(--spacing-large);
+}
+
 .signInBlock {
   padding-bottom: var(--spacing-small);
 
