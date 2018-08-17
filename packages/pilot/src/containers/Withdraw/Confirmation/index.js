@@ -59,7 +59,9 @@ class WithdrawConfirmationContainer extends Component {
       <Summary>
         <DataDisplay
           title={t('pages.withdraw.date')}
-          value={moment(date).format('DD/MM/YYYY')}
+          titleSize="small"
+          value={moment(date).format('L')}
+          valueSize="huge"
         />
         <TotalDisplay
           amount={amount}

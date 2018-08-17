@@ -10,7 +10,9 @@ const DataDisplay = ({
   color,
   subtitle,
   title,
+  titleSize,
   value,
+  valueSize,
 }) => (
   <div className={
       classNames(style.content, {
@@ -18,16 +20,30 @@ const DataDisplay = ({
       })
     }
   >
-    <div className={style.title}>
+    <div className={
+      classNames(style.title, {
+        [style[titleSize]]: titleSize,
+        })
+      }
+    >
       {
         typeof title === 'string'
-          ? <h2 style={{ color }}>{title}</h2>
+          ? (
+            <h2 style={{ color }}>
+              {title}
+            </h2>
+          )
           : title
       }
     </div>
 
     {children || (
-      <div className={style.value}>
+      <div className={
+        classNames(style.value, {
+          [style[valueSize]]: valueSize,
+          })
+        }
+      >
         <h3>{value}</h3>
       </div>
     )}
@@ -37,6 +53,8 @@ const DataDisplay = ({
     </div>
   </div>
 )
+
+const sizePropType = PropTypes.oneOf(['small', 'medium', 'large', 'huge'])
 
 DataDisplay.propTypes = {
   align: PropTypes.oneOf([
@@ -51,10 +69,12 @@ DataDisplay.propTypes = {
     PropTypes.node,
     PropTypes.string,
   ]).isRequired,
+  titleSize: (sizePropType),
   value: PropTypes.oneOfType([
     PropTypes.number,
     PropTypes.string,
   ]),
+  valueSize: (sizePropType),
 }
 
 DataDisplay.defaultProps = {
@@ -62,7 +82,9 @@ DataDisplay.defaultProps = {
   children: null,
   color: '#757575',
   subtitle: null,
+  titleSize: 'small',
   value: '',
+  valueSize: 'medium',
 }
 
 export default DataDisplay

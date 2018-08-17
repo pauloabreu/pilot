@@ -23,6 +23,7 @@ const DataDisplayExample = () => (
             }
             title="Random number"
             value={1234}
+            valueSize="huge"
           />
         </Col>
       </Row>
@@ -34,6 +35,7 @@ const DataDisplayExample = () => (
             color="#ff796f"
             title="Data"
             value="20/02/2000"
+            valueSize="huge"
           />
         </Col>
       </Row>
@@ -45,6 +47,7 @@ const DataDisplayExample = () => (
             color="#ff796f"
             title="Data"
             value="20/02/2000"
+            valueSize="huge"
           />
         </Col>
       </Row>

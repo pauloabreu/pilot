@@ -57,12 +57,9 @@ class WithdrawResult extends Component {
       <Summary>
         <DataDisplay
           title={t('pages.withdraw.date')}
-          value={date.format('DD/MM/YYYY')}
-        />
-        <TotalDisplay
-          amount={amount}
-          color="#37cc9a"
-          title={t('pages.withdraw.value_to_transfer')}
+          titleSize="small"
+          value={date.format('L')}
+          valueSize="huge"
         />
         <TotalDisplay
           amount={requested}

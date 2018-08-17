@@ -11,6 +11,7 @@ const SummaryExample = () => (
         <DataDisplay
           title="Data de Saída"
           value="20/03/2018"
+          valueSize="huge"
         />
         <TotalDisplay
           amount={9995000}

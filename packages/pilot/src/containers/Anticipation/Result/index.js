@@ -67,6 +67,7 @@ class AnticipationResult extends Component {
         <DataDisplay
           title={t('pages.anticipation.date.label')}
           value={formatLongDate(date)}
+          valueSize="huge"
         />
         <TotalDisplay
           amount={requested}

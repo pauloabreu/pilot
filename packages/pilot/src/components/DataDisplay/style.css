@@ -11,24 +11,21 @@
 .content {
   flex-direction: column;
   height: 100%;
-  justify-content: space-between;
 }
 
 .value,
 .title > h2 {
+  font-size: inherit;
   margin: 0;
 }
 
 .title {
+  font-weight: bold;
   height: 18px;
   text-transform: uppercase;
 
-  & h2 {
-    font-size: 14px;
-  }
-
   & > span {
-    color: var(--color-light-chromium-100);
+    font-weight: bold;
     margin-left: calc(var(--spacing-tiny) - 4px);
   }
 }
@@ -36,17 +33,14 @@
 .value {
   align-items: center;
   display: flex;
-
-  & small {
-    font-size: 18px;
-    font-weight: 900;
-    margin-right: var(--spacing-tiny);
-  }
+  font-weight: bold;
+  margin: var(--spacing-small) 0;
 
   & h3 {
     color: var(--color-light-steel-100);
-    font-size: 28px;
-    margin: 0;
+    font-size: inherit;
+    margin-bottom: 0;
+    margin-top: 0;
   }
 }
 
@@ -86,4 +80,20 @@
   & .subtitle {
     text-align: left;
   }
+}
+
+.small {
+  font-size: 12px;
+}
+
+.medium {
+  font-size: 14px;
+}
+
+.large {
+  font-size: 24px;
+}
+
+.huge {
+  font-size: 28px;
 }
