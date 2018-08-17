@@ -1,5 +1,6 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
+import classNames from 'classnames'
 
 import DataDisplay from '../DataDisplay'
 import currency from '../../formatters/currency'
@@ -17,7 +18,7 @@ const renderSymbol = (value) => {
   return null
 }
 
-const renderValue = (amount, color) => {
+const renderValue = (amount, amountSize, color) => {
   const formattedValue = currency(Math.abs(amount))
 
   return (
@@ -27,35 +28,57 @@ const renderValue = (amount, color) => {
       </small>
       {
         formattedValue === 'NaN'
-          ? <div className={style.empty} />
-          : <h3>{formattedValue}</h3>
+        ? <div className={style.empty} />
+        : (
+          <span className={
+            classNames({
+              [style[amountSize]]: amountSize,
+            })}
+          >
+            {formattedValue}
+          </span>
+        )
       }
     </div>
   )
 }
 
-const renderTitle = (color, title) => (
-  <Fragment>
-    <h2 style={{ color }}>{title}</h2>
-  </Fragment>
+const renderTitle = (title, titleColor, color, titleSize) => (
+  <span
+    className={
+      classNames({
+        [style[titleSize]]: titleSize,
+    })}
+    style={{
+      color: titleColor || color,
+     }}
+  >
+    {title}
+  </span>
 )
 
 const TotalDisplay = ({
   align,
   amount,
+  amountSize,
   color,
   subtitle,
   title,
+  titleColor,
+  titleSize,
 }) => (
   <DataDisplay
-    title={renderTitle(color, title)}
+    align={align}
     color={color}
     subtitle={subtitle}
-    align={align}
+    title={renderTitle(title, titleColor, color, titleSize)}
+    titleSize={titleSize}
   >
-    {renderValue(amount, color)}
+    {renderValue(amount, amountSize, color)}
   </DataDisplay>
 )
+
+const sizePropType = PropTypes.oneOf(['small', 'medium', 'large', 'huge'])
 
 TotalDisplay.propTypes = {
   align: PropTypes.oneOf([
@@ -63,15 +86,22 @@ TotalDisplay.propTypes = {
     'end',
     'start',
   ]),
-  title: PropTypes.node.isRequired,
   amount: PropTypes.number.isRequired,
+  amountSize: (sizePropType),
   color: PropTypes.string.isRequired,
   subtitle: PropTypes.node,
+  title: PropTypes.node.isRequired,
+  titleColor: PropTypes.string,
+  titleSize: (sizePropType),
+  valueSize: (sizePropType),
 }
 
 TotalDisplay.defaultProps = {
   align: 'center',
+  amountSize: 'large',
   subtitle: null,
+  titleColor: null,
+  titleSize: 'small',
 }
 
 export default TotalDisplay

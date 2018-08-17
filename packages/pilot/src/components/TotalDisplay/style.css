@@ -12,16 +12,21 @@
 .amount {
   align-items: center;
   display: flex;
-  margin: 0;
+  margin: var(--spacing-tiny) 0 0 0;
 
   & small {
     font-size: 18px;
-    font-weight: 900;
+    font-weight: bold;
     margin-right: var(--spacing-tiny);
   }
 
-  & h3 {
-    font-size: 28px;
+  & span {
+    color: var(--color-light-steel-100);
+    font-weight: bold;
+  }
+
+  & .title {
+    color: var(--color-light-steel-100);
     margin-top: 0;
     margin-bottom: 0;
   }
@@ -31,4 +36,20 @@
   border: 1px solid var(--color-light-steel-50);
   margin: calc(var(--spacing-small) - 5px) 0;
   width: 100px;
+}
+
+.small {
+  font-size: 12px;
+}
+
+.medium {
+  font-size: 14px;
+}
+
+.large {
+  font-size: 24px;
+}
+
+.huge {
+  font-size: 28px;
 }
