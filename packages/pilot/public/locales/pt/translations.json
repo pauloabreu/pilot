@@ -527,6 +527,19 @@
       "withdrawal_title": "Saldo atual",
       "unknown_error": "Olá, para você poder visualizar as informações do seu extrato é necessário que as extensões do tipo AdBlock estejam desabilitadas."
     },
+    "capture": {
+      "capture_action": "Capturar",
+      "identification": "Identificação",
+      "greater_than_zero": "O valor deve ser maior que zero",
+      "invalid_amount": "Valor para captura inválido",
+      "number": "Deve ser um número",
+      "confirmation": "Confirmação",
+      "success": "Transação capturada com sucesso!",
+      "title": "Capturar transação",
+      "token_capture_warning": "Como esta transação foi criada com sua chave de criptografia, a captura manual pode listar um valor diferente do desejado.",
+      "token_capture_link": "Mais informações",
+      "value_to_capture": "Valor a ser capturado R$"
+    },
     "manual_review": {
       "approve_action": "Aprovar transação",
       "legal_warning_approves_approve": "aprovação.",

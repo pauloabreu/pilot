@@ -4,6 +4,7 @@ import { checkA11y } from '@storybook/addon-a11y'
 
 import BoletoRefundDetails from './BoletoRefundDetails'
 import ConfigurationCardForm from './ConfigurationCardForm'
+import CaptureDetails from './CaptureDetails'
 import CopyButton from './CopyButton'
 import CurrencyInput from './CurrencyInput'
 import CreditCardRefundDetails from './CreditCardRefundDetails'
@@ -44,6 +45,7 @@ storiesOf('Components|Custom components', module)
   .add('Event list', () => <EventList />)
   .add('DataDisplay', () => <DataDisplay />)
   .add('Reprocess details', () => <ReprocessDetails />)
+  .add('Capture Details', () => <CaptureDetails />)
   .add('TotalDisplay', () => <TotalDisplay />)
   .add('Payment card', () => <PaymentCards />)
   .add('RiskLevel', () => <RiskLevel />)

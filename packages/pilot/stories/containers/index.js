@@ -33,6 +33,12 @@ import {
   BoletoRefund,
   CreditCardRefund,
 } from './Refund'
+import Capture from './Capture'
+import {
+  CaptureFormExample,
+  FixedCaptureFormExample,
+} from './Capture/Form'
+import CaptureResult from './Capture/Result'
 import Reprocess from './Reprocess'
 import ReprocessForm from './Reprocess/Form'
 import ReprocessResult from './Reprocess/Result'
@@ -144,6 +150,49 @@ storiesOf('Containers|Page containers', module)
   ))
   .add('Balance', () => (
     <Balance />
+  ))
+  .add('Capture form', () => (
+    <CaptureFormExample />
+  ))
+  .add('Capture form with fixed amount', () => (
+    <FixedCaptureFormExample />
+  ))
+  .add('Capture confirmation', () => (
+    <CaptureResult />
+  ))
+  .add('Capture step identification', () => (
+    <Capture
+      stepStatus={{
+        identification: 'current',
+        confirmation: 'pending',
+      }}
+    />
+  ))
+  .add('Capture step identification (token)', () => (
+    <Capture
+      isFromCheckout
+      stepStatus={{
+        identificaiton: 'current',
+        confirmation: 'pending',
+      }}
+    />
+  ))
+  .add('Capture step confirmation', () => (
+    <Capture
+      stepStatus={{
+        identification: 'success',
+        confirmation: 'current',
+      }}
+    />
+  ))
+  .add('Capture step confirmation error', () => (
+    <Capture
+      stepStatus={{
+        identification: 'success',
+        confirmation: 'error',
+      }}
+      statusMessage="An error ocurred!"
+    />
   ))
   .add('Reprocess form', () => (
     <ReprocessForm />
