@@ -1,0 +1,27 @@
+@import "former-kit-skin-pagarme/dist/styles/colors/light.css";
+@import "former-kit-skin-pagarme/dist/styles/spacing.css";
+
+.containerList {
+  background-color: var(--color-white);
+  border-radius: 4px;
+  box-shadow: 0 5px 4px -3px rgba(var(--color-black), 0.2);
+  display: block;
+  margin-bottom: var(--spacing-tiny);
+  margin-top: var(--spacing-tiny);
+  padding: 0;
+}
+
+.item {
+  list-style: none;
+  padding: 4px var(--spacing-tiny);
+}
+
+.highlighted {
+  color: var(--color-light-greenish-120);
+  background-color: var(--color-light-silver-20);
+}
+
+.match {
+  color: var(--color-light-greenish-100);
+  font-weight: bold;
+}
