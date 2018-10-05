@@ -2,36 +2,62 @@ import { range } from 'ramda'
 
 const getOnlyNumbers = string => string.replace(/\D/g, '')
 
-// TODO: break into smaller functions
-function formatToRecipient (data, options = {}) {
+export function formatToAnticipation (data, options = {}) {
+  const recipientAnticipationData = {}
   const { canConfigureAnticipation } = options
-  const recipientData = {}
-  const { documentType } = data.identification
 
-  // Bank account
-  if (data.bankAccount.id) {
-    recipientData.bank_account_id = data.bankAccount.id
-  } else {
-    const document = data.identification[documentType]
+  switch (data.configuration.anticipationModel) {
+    case 'automatic_dx':
+      recipientAnticipationData.anticipatable_volume_percentage = 100
+      recipientAnticipationData.automatic_anticipation_enabled = true
+      recipientAnticipationData.automatic_anticipation_days = range(1, 32)
+      recipientAnticipationData.automatic_anticipation_1025_delay =
+        data.configuration.anticipationDays
 
-    recipientData.bank_account = {
-      bank_code: data.bankAccount.bank,
-      agencia: data.bankAccount.agency,
-      conta: data.bankAccount.number,
-      conta_dv: data.bankAccount.number_digit,
-      type: data.bankAccount.type,
-      document_number: getOnlyNumbers(document),
-      legal_name: data.bankAccount.name,
-    }
+      if (canConfigureAnticipation) {
+        recipientAnticipationData.automatic_anticipation_type = '1025'
+      }
+      break
+    case 'automatic_volume':
+      recipientAnticipationData.anticipatable_volume_percentage =
+        data.configuration.anticipationVolumePercentage
+      recipientAnticipationData.automatic_anticipation_enabled = true
 
-    if (data.bankAccount.agency_digit) {
-      recipientData.agencia_dv = data.bankAccount.agency_digit
-    }
+      if (canConfigureAnticipation) {
+        recipientAnticipationData.automatic_anticipation_type = 'full'
+      }
+      break
+    case 'automatic_1025':
+      recipientAnticipationData.anticipatable_volume_percentage = 100
+      recipientAnticipationData.automatic_anticipation_enabled = true
+      recipientAnticipationData.automatic_anticipation_days = [10, 25]
+      recipientAnticipationData.automatic_anticipation_1025_delay = 15
+
+      if (canConfigureAnticipation) {
+        recipientAnticipationData.automatic_anticipation_type = '1025'
+      }
+      break
+    case 'manual':
+    default:
+      recipientAnticipationData.anticipatable_volume_percentage =
+        data.configuration.anticipationVolumePercentage ||
+        data.anticipationVolumePercentage
+      recipientAnticipationData.automatic_anticipation_enabled = false
+
+      if (canConfigureAnticipation) {
+        recipientAnticipationData.automatic_anticipation_type = 'full'
+      }
+      break
   }
+  return recipientAnticipationData
+}
+
+export function formatToTransfer (data) {
+  const recipientTransferData = {}
 
   // Transfer
-  recipientData.transfer_interval = data.configuration.transferInterval
-  recipientData.transfer_enabled = data.configuration.transferEnabled
+  recipientTransferData.transfer_interval = data.configuration.transferInterval
+  recipientTransferData.transfer_enabled = data.configuration.transferEnabled
 
   if (data.configuration.transferInterval === 'weekly') {
     const weekDayNumberMap = {
@@ -43,58 +69,77 @@ function formatToRecipient (data, options = {}) {
     }
     const weekDay = data.configuration.transferWeekday
     const transferDay = weekDayNumberMap[weekDay]
-    recipientData.transfer_day = transferDay
+    recipientTransferData.transfer_day = transferDay
   }
 
   if (data.configuration.transferInterval === 'daily') {
-    recipientData.transfer_day = '0'
+    recipientTransferData.transfer_day = '0'
   } else {
-    recipientData.transfer_day = data.configuration.transferDay
+    recipientTransferData.transfer_day = data.configuration.transferDay
+  }
+  return recipientTransferData
+}
+
+export function formatToBankAccount (data) {
+  const recipientBankAccountData = {}
+
+  // Bank account
+  if (data.bankAccount) {
+    if (data.bankAccount.id) {
+      recipientBankAccountData.bank_account_id = data.bankAccount.id
+    } else {
+      const { documentType } = data.identification
+      const document = data.identification[documentType]
+      recipientBankAccountData.bank_account = {
+        bank_code: data.bankAccount.bank,
+        agencia: data.bankAccount.agency,
+        conta: data.bankAccount.number,
+        conta_dv: data.bankAccount.number_digit,
+        type: data.bankAccount.type,
+        document_number: getOnlyNumbers(document),
+        legal_name: data.bankAccount.name,
+      }
+      if (data.bankAccount.agency_digit) {
+        recipientBankAccountData.agencia_dv = data.bankAccount.agency_digit
+      }
+    }
   }
 
-  // Anticipation
-  switch (data.configuration.anticipationModel) {
-    case 'automatic_dx':
-      recipientData.anticipatable_volume_percentage = 100
-      recipientData.automatic_anticipation_enabled = true
-      recipientData.automatic_anticipation_days = range(1, 32)
-      recipientData.automatic_anticipation_1025_delay =
-        data.configuration.anticipationDays
+  if (data.configuration) {
+    if (data.configuration.id) {
+      recipientBankAccountData.bank_account_id = data.configuration.id
+    } else if (data.identification) {
+      const { documentType } = data.identification
+      const document = data.identification[documentType]
 
-      if (canConfigureAnticipation) {
-        recipientData.automatic_anticipation_type = '1025'
+      recipientBankAccountData.bank_account = {
+        bank_code: data.bankAccount.bank,
+        agencia: data.bankAccount.agency,
+        conta: data.bankAccount.number,
+        conta_dv: data.bankAccount.number_digit,
+        type: data.bankAccount.type,
+        document_number: getOnlyNumbers(document),
+        legal_name: data.bankAccount.name,
       }
-      break
-    case 'automatic_volume':
-      recipientData.anticipatable_volume_percentage =
-        data.configuration.anticipationVolumePercentage
-      recipientData.automatic_anticipation_enabled = true
 
-      if (canConfigureAnticipation) {
-        recipientData.automatic_anticipation_type = 'full'
+      if (data.bankAccount.agency_digit) {
+        recipientBankAccountData.agencia_dv = data.bankAccount.agency_digit
       }
-      break
-    case 'automatic_1025':
-      recipientData.anticipatable_volume_percentage = 100
-      recipientData.automatic_anticipation_enabled = true
-      recipientData.automatic_anticipation_days = [10, 25]
-      recipientData.automatic_anticipation_1025_delay = 15
-
-      if (canConfigureAnticipation) {
-        recipientData.automatic_anticipation_type = '1025'
-      }
-      break
-    case 'manual':
-    default:
-      recipientData.anticipatable_volume_percentage =
-        data.configuration.anticipationVolumePercentage
-      recipientData.automatic_anticipation_enabled = false
-
-      if (canConfigureAnticipation) {
-        recipientData.automatic_anticipation_type = 'full'
-      }
-      break
+    }
   }
+
+
+  return recipientBankAccountData
+}
+
+function formatToRecipient (data, options) {
+  const recipientData = {
+    ...formatToAnticipation(data, options),
+    ...formatToTransfer(data),
+    ...formatToBankAccount(data),
+  }
+  const { documentType } = data.identification
+
 
   // Register
   const hasRegisterInformation = data
@@ -142,7 +187,6 @@ function formatToRecipient (data, options = {}) {
     if (partnerNumber > 0) {
       const partners = range(0, partnerNumber)
         .map(n => data.identification[`partner${n}`])
-        // TODO: Precisa de email, não usa telefone
         .map(partner => ({
           type: 'individual',
           document_number: getOnlyNumbers(partner.cpf),
@@ -153,7 +197,6 @@ function formatToRecipient (data, options = {}) {
       recipientData.register_information.managing_partners = partners
     }
   }
-
   return recipientData
 }
 

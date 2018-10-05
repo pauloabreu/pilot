@@ -198,29 +198,29 @@ class DetailRecipientPage extends Component {
   }
 
   requestClient () {
-    const getRecipientData = this.props.client
+    const { client } = this.props
     const { id } = this.props.match.params
 
-    return getRecipientData.recipient.detail(id)
-      .then((recipientData) => {
-        const {
-          identification,
-        } = recipientData.informationData
+    let recipient
 
-        return this.fetchAccounts(identification)
-          .then((accounts) => {
-            this.setState({
-              ...this.state,
-              recipientData: {
-                ...recipientData,
-                configurationData: {
-                  ...recipientData.configurationData,
-                  ...accounts,
-                },
-              },
-              loading: false,
-            })
-          })
+    client.recipient.detail(id)
+      .then((result) => {
+        recipient = result
+        const recipientIdentification = recipient.informationData.identification
+        return this.fetchAccounts(recipientIdentification)
+      })
+      .then((accounts) => {
+        this.setState({
+          ...this.state,
+          recipientData: {
+            ...recipient,
+            configurationData: {
+              ...recipient.configurationData,
+              ...accounts,
+            },
+          },
+          loading: false,
+        })
       })
       .catch((error) => {
         this.setState({
@@ -231,9 +231,7 @@ class DetailRecipientPage extends Component {
   }
 
   render () {
-    console.log('depois do render', this.state)
     if (this.state.recipientData) {
-      console.log('formatado', this.state.recipientData)
       return (
         <Card>
           <DetailRecipient
