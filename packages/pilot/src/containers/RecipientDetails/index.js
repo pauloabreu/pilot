@@ -36,6 +36,7 @@ class RecipientDetails extends Component {
       configurationProps,
       t,
     } = this.props
+
     return (
       <CardContent>
         <div className={styles.container}>
@@ -82,6 +83,7 @@ class RecipientDetails extends Component {
           </TabItem>
           <TabItem text={t('mais_informacoes')}>
             <Information
+              fetchAccounts={informationProps.documentType}
               {...informationProps}
               t={t}
             />

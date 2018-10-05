@@ -41,6 +41,25 @@ class BankAccountContent extends Component {
     }
 
     this.handleFormSelectionChange = this.handleFormSelectionChange.bind(this)
+    this.onSave = this.onSave.bind(this)
+  }
+
+  onSave (data) {
+    const dataTransformed = this.transformToSelectedForm(data)
+    this.props.onSave(dataTransformed)
+  }
+
+  transformToSelectedForm (data) {
+    const { selectedForm } = this.state
+    if (selectedForm === ADD_ACCOUNT) {
+      return {
+        ...data,
+        id: undefined,
+      }
+    }
+    return {
+      id: data.id,
+    }
   }
 
   handleFormSelectionChange (selectedForm) {
@@ -83,7 +102,6 @@ class BankAccountContent extends Component {
       accounts,
       onCancel,
       onChange,
-      onSave,
       t,
     } = this.props
 
@@ -128,7 +146,7 @@ class BankAccountContent extends Component {
               bank: [required],
             }}
             onSubmit={(data, errors) => {
-              if (!errors) onSave(data)
+              if (!errors) this.onSave(data)
             }}
             onChange={onChange}
           >
