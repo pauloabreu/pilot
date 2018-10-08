@@ -42,6 +42,7 @@ import {
 import IconInfo from 'emblematic-icons/svg/Info32.svg'
 import IconCheck from 'emblematic-icons/svg/Check24.svg'
 import IconClearClose from 'emblematic-icons/svg/ClearClose24.svg'
+import DownloadIcon from 'emblematic-icons/svg/Download24.svg'
 import IconReverse from 'emblematic-icons/svg/Reverse24.svg'
 import ReprocessIcon from 'emblematic-icons/svg/Reprocess24.svg'
 import currencyFormatter from '../../formatters/currency'
@@ -271,12 +272,19 @@ class TransactionDetails extends Component {
       onManualReviewRefuse,
       onManualReviewApprove,
       permissions,
+      onExport,
       onRefund,
       onReprocess,
       transaction: {
         capabilities,
       },
     } = this.props
+
+    const onExportAction = {
+      icon: <DownloadIcon width={12} height={12} />,
+      onClick: onExport,
+      title: 'Exportar',
+    }
 
     const onReprocessAction = {
       icon: <ReprocessIcon width={12} height={12} />,
@@ -315,11 +323,13 @@ class TransactionDetails extends Component {
             propEq('reprocessable', true),
             always(isEmptyOrNull(nextTransactionId))
           ),
+          always(onExportAction),
           always(onReprocessAction),
           always(null)
         ),
         ifElse(
           propEq('refundable', true),
+          always(onExportAction),
           always(onRefundAction),
           always(null)
         ),
@@ -870,6 +880,7 @@ TransactionDetails.propTypes = {
   onManualReviewRefuse: PropTypes.func,
   onNextTransactionRedirect: validateNextTransactionRedirect,
   onPreviousTransactionRedirect: validatePreviousTransactionRedirect,
+  onExport: PropTypes.func,
   onRefund: validateRefundFunction,
   onReprocess: validateReprocessFunction,
   onShowBoleto: PropTypes.func,

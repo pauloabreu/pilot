@@ -196,6 +196,7 @@ class TransactionDetails extends Component {
     this.handleManualReviewRefuse = this.handleManualReviewRefuse.bind(this)
     this.handleNextTransactionRedirect = this.handleNextTransactionRedirect.bind(this)
     this.handlePreviousTransactionRedirect = this.handlePreviousTransactionRedirect.bind(this)
+    this.handleExportClick = this.handleExportClick.bind(this)
     this.handleRefund = this.handleRefund.bind(this)
     this.handleReprocessClose = this.handleReprocessClose.bind(this)
     this.handleReprocessOpen = this.handleReprocessOpen.bind(this)
@@ -324,6 +325,12 @@ class TransactionDetails extends Component {
     window.open(boleto.url)
   }
 
+  handleExportClick () {
+    const data = this.state.result
+    window.print(data)
+  }
+
+
   render () {
     const {
       match: { params: { id } },
@@ -440,6 +447,7 @@ class TransactionDetails extends Component {
           onManualReviewApprove={this.handleManualReviewApprove}
           onManualReviewRefuse={this.handleManualReviewRefuse}
           onRefund={this.handleRefund}
+          onExport={this.handleExportClick}
           onNextTransactionRedirect={this.handleNextTransactionRedirect}
           onPreviousTransactionRedirect={this.handlePreviousTransactionRedirect}
           onReprocess={this.handleReprocessOpen}
