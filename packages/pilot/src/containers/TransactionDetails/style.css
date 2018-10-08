@@ -17,3 +17,29 @@
 .children {
   font-size: 18px;
 }
+
+@media print {
+  /* stylelint-disable */
+  * {
+    overflow: visible !important;
+    position: relative;
+  }
+  aside + div > header,
+  aside {
+    display: none!important;
+  }
+
+  @page:first {
+    margin: 0cm;
+  }
+  @page:last {
+    margin: 5cm;
+  }
+  @page:left {
+    margin: 2cm 1.5cm 2cm 2cm;
+  }
+  @page:right {
+    margin: 2cm 2cm 2cm 1.5cm;
+  }
+  /* stylelint-enable */
+}

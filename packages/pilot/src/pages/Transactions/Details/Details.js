@@ -326,8 +326,8 @@ class TransactionDetails extends Component {
   }
 
   handleExportClick () {
-    const data = this.state.result
-    window.print(data)
+    const result = this.state // eslint-disable-line no-unused-vars
+    window.print()
   }
 
 
