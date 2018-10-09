@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { translate } from 'react-i18next'
 import qs from 'qs'
+import XLSX from 'xlsx'
 import {
   __,
   append,
@@ -136,6 +137,34 @@ const parseQueryUrl = pipe(
   mergeAll
 )
 
+const handleCSVExportDownloadingClick = (data, filename) => {
+  const downloadLink = document.createElement('a')
+  downloadLink.target = '_blank'
+  downloadLink.download = filename.concat('csv')
+
+  const blob = new Blob([data], { type: 'application/vnd.ms-excel' })
+
+  const URL = window.URL || window.webkitURL
+  const downloadUrl = URL.createObjectURL(blob)
+
+  downloadLink.href = downloadUrl
+
+  document.body.append(downloadLink)
+
+  downloadLink.click()
+
+  document.body.removeChild(downloadLink)
+  URL.revokeObjectURL(downloadUrl)
+}
+
+const handleXLSExportDownloadingClick = (data, filename) => {
+  const workSheetName = 'sheetJS'
+  const newWorkSheet = XLSX.utils.book_new()
+  const dataWorkSheet = XLSX.utils.aoa_to_sheet(data)
+  XLSX.utils.book_append_sheet(newWorkSheet, dataWorkSheet, workSheetName)
+
+  XLSX.writeFile(newWorkSheet, filename.concat('xls'))
+}
 
 class TransactionsSearch extends React.Component {
   constructor (props) {
@@ -160,6 +189,7 @@ class TransactionsSearch extends React.Component {
 
     this.handleChartsCollapse = this.handleChartsCollapse.bind(this)
     this.handleExpandRow = this.handleExpandRow.bind(this)
+    this.handleExport = this.handleExport.bind(this)
     this.handleFilterChange = this.handleFilterChange.bind(this)
     this.handleFilterClear = this.handleFilterClear.bind(this)
     this.handleOrderChange = this.handleOrderChange.bind(this)
@@ -359,6 +389,21 @@ class TransactionsSearch extends React.Component {
     })
   }
 
+  handleExport (exportType) {
+    const newQuery = { ...this.state.query, count: this.state.result.total.count }
+    return this.props.client
+      .transactions
+      .exportData(newQuery, exportType)
+      .then((res) => {
+        const filename = `Pagarme - ${moment().format('LLL')}.`
+        if (exportType === 'csv') {
+          handleCSVExportDownloadingClick(res, filename)
+        } else {
+          handleXLSExportDownloadingClick(res, filename)
+        }
+      })
+  }
+
   handleSelectRow (selectedRows) {
     this.setState({
       selectedRows,
@@ -414,6 +459,7 @@ class TransactionsSearch extends React.Component {
         onChartsCollapse={this.handleChartsCollapse}
         onDetailsClick={this.handleRowDetailsClick}
         onExpandRow={this.handleExpandRow}
+        onExport={this.handleExport}
         onFilterChange={this.handleFilterChange}
         onFilterClear={this.handleFilterClear}
         onOrderChange={this.handleOrderChange}
@@ -440,6 +486,7 @@ TransactionsSearch.propTypes = {
   client: PropTypes.shape({
     transactions: PropTypes.shape({
       countPendingReviews: PropTypes.func.isRequired,
+      exportData: PropTypes.func.isRequired,
       search: PropTypes.func.isRequired,
     }).isRequired,
   }).isRequired,

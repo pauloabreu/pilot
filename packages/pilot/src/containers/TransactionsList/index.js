@@ -8,6 +8,7 @@ import IconTable from 'emblematic-icons/svg/Menu32.svg'
 import IconWarning from 'emblematic-icons/svg/Warning32.svg'
 import Search32 from 'emblematic-icons/svg/Search32.svg'
 import Calendar32 from 'emblematic-icons/svg/Calendar32.svg'
+import Download32 from 'emblematic-icons/svg/Download32.svg'
 
 import {
   findIndex,
@@ -35,7 +36,7 @@ import style from './style.css'
 
 import Filter from '../Filter'
 import Charts from './Charts'
-
+import ExportData from '../../components/ExportData'
 import tableColumns from './tableColumns'
 
 import itemsPerPage from '../../models/itemsPerPage'
@@ -61,6 +62,18 @@ const formatSelectedPeriod = (t, { start, end }) => {
   )
 }
 
+
+const getExportOptions = onExport => ([
+  {
+    title: 'CSV',
+    action: () => onExport('csv'),
+  },
+  {
+    title: 'Excel',
+    action: () => onExport('xls'),
+  },
+])
+
 const TransactionsList = ({
   amount,
   count,
@@ -73,6 +86,7 @@ const TransactionsList = ({
   onDetailsClick,
   onPendingReviewsFilter,
   onExpandRow,
+  onExport,
   onFilterChange,
   onFilterClear,
   onOrderChange,
@@ -317,6 +331,7 @@ TransactionsList.propTypes = {
   })).isRequired,
   loading: PropTypes.bool.isRequired,
   onDetailsClick: PropTypes.func.isRequired,
+  onExport: PropTypes.func.isRequired,
   onExpandRow: PropTypes.func.isRequired,
   onRowClick: PropTypes.func.isRequired,
   onFilterChange: PropTypes.func.isRequired,
