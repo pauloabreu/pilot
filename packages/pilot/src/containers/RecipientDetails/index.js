@@ -43,25 +43,25 @@ class RecipientDetails extends Component {
         <div className={styles.container}>
           <div className={styles.left}>
             <div className={styles.bankAccount}>
-              <span className={styles.label}>{t('conta_bancaria')}</span>
+              <span className={styles.label}>{t('pages.recipients.bank_account')}</span>
               <h2 className={styles.companyName}>{recipient.name}</h2>
-              <span className={styles.labelBottom}>{`${t('ID: ')}#${recipient.id}`}</span>
+              <span className={styles.labelBottom}>{`${t('pages.recipients.ID')}#${recipient.id}`}</span>
             </div>
             <div className={styles.status}>
-              <span className={styles.label}>{t('status')}</span>
+              <span className={styles.label}>{t('pages.recipients.status')}</span>
               <div className={styles.statusLegend}>
                 <Legend
                   color="#17c9b2"
                   acronym={recipient.status}
                   hideLabel
                 >
-                  {t('ativo')}
+                  {t('pages.recipients.active')}
                 </Legend>
               </div>
             </div>
           </div>
           <div className={styles.right}>
-            <span className={styles.label}>{t('id_do_recebedor')}</span>
+            <span className={styles.label}>{t('pages.recipients.id')}</span>
             <span className={styles.hash}>{recipient.hash}</span>
             <span className={styles.labelBottom}>{`${t('pages.recipients.date_created')}: ${dateFormatter(recipient.createDate)}`}</span>
           </div>
@@ -70,19 +70,19 @@ class RecipientDetails extends Component {
           selected={this.state.selected}
           onTabChange={this.handleChange}
         >
-          <TabItem text={t('extrato')}>
+          <TabItem text={t('pages.recipients.extract')}>
             <Balance
               {...balanceProps}
               t={t}
             />
           </TabItem>
-          <TabItem text={t('configuracoes')}>
+          <TabItem text={t('pages.recipients.configurations')}>
             <Configuration
               {...configurationProps}
               t={t}
             />
           </TabItem>
-          <TabItem text={t('mais_informacoes')}>
+          <TabItem text={t('pages.recipients.more_information')}>
             <Information
               fetchAccounts={informationProps.documentType}
               {...informationProps}
