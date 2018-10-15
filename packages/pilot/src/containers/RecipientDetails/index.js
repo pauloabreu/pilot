@@ -10,6 +10,7 @@ import { omit } from 'ramda'
 import Information from './Info'
 import Configuration from './Config'
 import Balance from './Balance'
+import dateFormatter from '../../../src/formatters/longDate'
 
 import styles from './styles.css'
 
@@ -62,7 +63,7 @@ class RecipientDetails extends Component {
           <div className={styles.right}>
             <span className={styles.label}>{t('id_do_recebedor')}</span>
             <span className={styles.hash}>{recipient.hash}</span>
-            <span className={styles.labelBottom}>{`${t('data_de_criacao')}: ${recipient.createDate}`}</span>
+            <span className={styles.labelBottom}>{`${t('pages.recipients.date_created')}: ${dateFormatter(recipient.createDate)}`}</span>
           </div>
         </div>
         <TabBar

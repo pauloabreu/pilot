@@ -4,7 +4,7 @@ import { Spacing } from 'former-kit'
 
 import AnticipationIcon from 'emblematic-icons/svg/Undo32.svg'
 import TransferIcon from 'emblematic-icons/svg/Transaction32.svg'
-import BackAccountIcon from './BankAccount32.svg'
+import BackAccountIcon from 'emblematic-icons/svg/BankAccount32.svg'
 
 import AnticipationContent from './AnticipationContent'
 import TransferContent from './TransferContent'

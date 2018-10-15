@@ -5,6 +5,7 @@ import {
 } from 'ramda'
 
 import {
+  Button,
   Col,
   Row,
   Grid,
@@ -50,7 +51,7 @@ const antecipationModel = (data) => {
   return 'custom'
 }
 
-const getDefaultColumns = ({ t }) => ([
+const getDefaultColumns = ({ t, onDetailsClick }) => ([
   {
     title: t('pages.recipients.status'),
     renderer: item => (
@@ -141,6 +142,19 @@ const getDefaultColumns = ({ t }) => ([
           </Row>
         </Col>
       </Grid>
+    ),
+  },
+  {
+    title: '',
+    isAction: true,
+    orderable: false,
+    renderer: index => (
+      <Button
+        fill="outline"
+        onClick={() => onDetailsClick(index)}
+      >
+        {t('pages.recipients.show_details')}
+      </Button>
     ),
   },
 ])
