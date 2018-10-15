@@ -109,20 +109,10 @@ class SuggestionInput extends React.Component {
         renderSuggestion={itemRenderer || renderSuggestion}
         suggestions={suggestions}
         theme={{
-          // container: style.container,
-          // containerOpen: 'react-autosuggest__container--open',
-          // input: 'react-autosuggest__input',
-          // inputOpen: 'react-autosuggest__input--open',
-          // inputFocused: 'react-autosuggest__input--focused',
           suggestionsContainer: style.container,
-          // suggestionsContainerOpen: 'react-autosuggest__suggestions-container--open',
           suggestionsList: style.containerList,
           suggestion: style.item,
-          // suggestionFirst: 'react-autosuggest__suggestion--first',
           suggestionHighlighted: style.highlighted,
-          // sectionContainer: 'react-autosuggest__section-container',
-          // sectionContainerFirst: 'react-autosuggest__section-container--first',
-          // sectionTitle: 'react-autosuggest__section-title',
         }}
       />
     )

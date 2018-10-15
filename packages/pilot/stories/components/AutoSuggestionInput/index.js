@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import { action } from '@storybook/addon-actions'
 
 import Section from '../../Section'
@@ -13,16 +13,14 @@ const data = [
   { name: 'Coke Light', value: 'coke-light' },
 ]
 
-const AutoSuggestion = () => (
-  <Fragment>
-    <Section title="Auto Suggestion Input">
-      <SuggestionInput
-        data={data}
-        onChange={action('change')}
-        placeholder="type to search..."
-      />
-    </Section>
-  </Fragment>
+const SuggestionInputExample = () => (
+  <Section title="Suggestion Input">
+    <SuggestionInput
+      data={data}
+      onChange={action('change')}
+      placeholder="type to search..."
+    />
+  </Section>
 )
 
-export default AutoSuggestion
+export default SuggestionInputExample

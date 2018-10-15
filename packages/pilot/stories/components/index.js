@@ -2,7 +2,7 @@ import React from 'react'
 import { storiesOf } from '@storybook/react'
 import { checkA11y } from '@storybook/addon-a11y'
 
-import AutoSuggestion from './AutoSuggestionInput'
+import SuggestionInput from './AutoSuggestionInput'
 import BoletoRefundDetails from './BoletoRefundDetails'
 import ConfigurationCardForm from './ConfigurationCardForm'
 import CopyButton from './CopyButton'
@@ -35,7 +35,7 @@ import MessageActions from './MessageActions'
 
 storiesOf('Components', module)
   .addDecorator(checkA11y)
-  .add('auto suggestion input', () => <AutoSuggestion />)
+  .add('Suggestion input', () => <SuggestionInput />)
   .add('Configuration card form', () => <ConfigurationCardForm />)
   .add('Copy button', () => <CopyButton />)
   .add('Currency Input', () => <CurrencyInput />)
