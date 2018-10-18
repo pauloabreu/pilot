@@ -181,6 +181,29 @@ const cancelBulkAnticipation = ({ bulkId, recipientId }, client) =>
 
 const userIsReadOnly = propEq('permission', 'read_only')
 
+const handleExportDataSuccess = (res, format) => {
+  let contentType
+  if (format === 'xlsx') {
+    contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+  } else {
+    contentType = 'text/csv;charset=utf-8'
+  }
+
+  const blob = new Blob([res], { type: contentType })
+  const filename = `PagarMe_Extrato_${moment().format('DD/MM/YYYY')}.${format}`
+
+  const downloadLink = document.createElement('a')
+  downloadLink.target = '_blank'
+  downloadLink.download = filename
+  const URL = window.URL || window.webkitURL
+  const downloadUrl = URL.createObjectURL(blob)
+  downloadLink.href = downloadUrl
+  document.body.append(downloadLink)
+  downloadLink.click()
+  document.body.removeChild(downloadLink)
+  URL.revokeObjectURL(downloadUrl)
+}
+
 class Balance extends Component {
   constructor (props) {
     super(props)
@@ -207,6 +230,7 @@ class Balance extends Component {
 
     this.handleAnticipation = this.handleAnticipation.bind(this)
     this.handleCancelRequest = this.handleCancelRequest.bind(this)
+    this.handleExportData = this.handleExportData.bind(this)
     this.handleDateChange = this.handleDateChange.bind(this)
     this.handleFilterClick = this.handleFilterClick.bind(this)
     this.handlePageChange = this.handlePageChange.bind(this)
@@ -376,6 +400,23 @@ class Balance extends Component {
       }))
   }
 
+  handleExportData (format) {
+    const { client, company } = this.props
+    const { query } = this.state
+    const startDate = query.dates.start.format('x')
+    const endDate = query.dates.end.format('x')
+
+    const recipientId = getRecipientId(company)
+    return client.balanceOperations
+      .find({
+        recipientId,
+        format,
+        startDate,
+        endDate,
+      })
+      .then(res => handleExportDataSuccess(res, format))
+  }
+
   handleDateChange (dates) {
     const { query } = this.state
 
@@ -505,6 +546,7 @@ class Balance extends Component {
           onCancelRequestClick={userIsReadOnly(user) ? null : this.handleOpenConfirmCancel}
           onCancelRequestClose={this.handleCloseConfirmCancel}
           onConfirmCancelPendingRequest={this.handleCancelRequest}
+          onExport={this.handleExportData}
           onFilterClick={this.handleFilterClick}
           onPageChange={this.handlePageChange}
           onWithdrawClick={this.handleWithdraw}
