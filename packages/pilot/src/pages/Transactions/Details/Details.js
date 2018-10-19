@@ -325,8 +325,8 @@ class TransactionDetails extends Component {
     window.open(boleto.url)
   }
 
+  /* eslint-disable class-methods-use-this */
   handleExportClick () {
-    const result = this.state // eslint-disable-line no-unused-vars
     window.print()
   }
 
