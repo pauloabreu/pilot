@@ -283,7 +283,7 @@ Refund.propTypes = {
   onSuccess: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
   transaction: PropTypes.shape({
-    id: PropTypes.number.isRequired,
+    id: PropTypes.number,
   }).isRequired,
 }
 

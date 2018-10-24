@@ -62,16 +62,14 @@ class MenagementTeam extends React.Component {
     const { loadingCreateUser } = this.state
     return (
       <Fragment>
-        {this.state.isModalOpened &&
-          <AddNewUserModal
-            isOpen={this.state.isModalOpened}
-            handleCloseModal={this.handleCloseModal}
-            handleCreateUser={this.props.handleCreateUser}
-            status={createUserStatus}
-            loading={loadingCreateUser}
-            t={t}
-          />
-        }
+        <AddNewUserModal
+          isOpen={this.state.isModalOpened}
+          handleCloseModal={this.handleCloseModal}
+          handleCreateUser={this.props.handleCreateUser}
+          status={createUserStatus}
+          loading={loadingCreateUser}
+          t={t}
+        />
         <CardActions>
           <Button
             size="default"

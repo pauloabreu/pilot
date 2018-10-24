@@ -53,7 +53,7 @@ class Reprocess extends Component {
       error: null,
       loading: false,
       stepStatus: reprocessStepStatuses.confirmation,
-      transaction: props.transaction,
+      transaction: null,
     }
     this.handleClose = this.handleClose.bind(this)
     this.handleConfirm = this.handleConfirm.bind(this)
@@ -63,9 +63,11 @@ class Reprocess extends Component {
     this.requestData = this.requestData.bind(this)
   }
 
-  componentDidMount () {
-    if (isEmptyOrNull(this.state.transaction)
-      && isEmptyOrNull(this.props.transaction)) {
+  componentDidUpdate (prevProps) {
+    const { isOpen } = this.props
+    if (isOpen
+      && prevProps.isOpen !== isOpen
+      && isEmptyOrNull(this.state.transaction)) {
       this.requestData()
     }
   }
@@ -82,10 +84,10 @@ class Reprocess extends Component {
 
     client.transactions
       .details(transactionId)
-      .then(({ result }) => {
+      .then(({ transaction }) => {
         this.setState({
           loading: false,
-          transaction: result,
+          transaction,
         })
       })
       .catch((error) => {
@@ -161,7 +163,10 @@ class Reprocess extends Component {
   }
 
   render () {
-    const { t } = this.props
+    const {
+      isOpen,
+      t,
+    } = this.props
     const {
       error,
       loading,
@@ -175,9 +180,9 @@ class Reprocess extends Component {
 
     return (
       <Fragment>
-        {!isEmpty(transaction) &&
+        {!isNil(transaction) &&
           <ReprocessContainer
-            isOpen
+            isOpen={isOpen}
             loading={loading}
             onCancel={this.handleClose}
             onConfirm={this.handleConfirm}
@@ -206,31 +211,12 @@ Reprocess.propTypes = {
     replace: PropTypes.func,
   }).isRequired,
   onClose: PropTypes.func.isRequired,
+  isOpen: PropTypes.bool.isRequired,
   t: PropTypes.func.isRequired,
-  transaction: PropTypes.shape({
-    amount: PropTypes.number,
-    card: PropTypes.shape({
-      first_digits: PropTypes.string.isRequired,
-      holder_name: PropTypes.string.isRequired,
-      last_digits: PropTypes.string.isRequired,
-    }),
-    id: PropTypes.oneOfType([
-      PropTypes.number,
-      PropTypes.string,
-    ]),
-    payment: PropTypes.shape({
-      installments: PropTypes.number.isRequired,
-    }),
-  }),
   transactionId: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number,
   ]).isRequired,
 }
-
-Reprocess.defaultProps = {
-  transaction: null,
-}
-
 
 export default enhanced(Reprocess)

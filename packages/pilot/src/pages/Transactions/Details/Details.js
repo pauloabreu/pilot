@@ -468,20 +468,18 @@ class TransactionDetails extends Component {
             transactionId={transaction.id}
           />
         }
-        {showRefund &&
-          <Refund
-            isOpen={showRefund}
-            onClose={this.handleCloseRefund}
-            onSuccess={this.handleUpdate}
-            transaction={transaction}
-          />}
-        {showReprocess &&
-          <Reprocess
-            onClose={this.handleReprocessClose}
-            transactionId={id}
-            transaction={transaction}
-          />
-        }
+        <Refund
+          isOpen={showRefund}
+          onClose={this.handleCloseRefund}
+          onSuccess={this.handleUpdate}
+          transaction={transaction}
+        />
+        <Reprocess
+          isOpen={showReprocess}
+          onClose={this.handleReprocessClose}
+          transactionId={id}
+          transaction={transaction}
+        />
       </Fragment>
     )
   }
