@@ -93,7 +93,7 @@ const isRecipientId = (recipientText) => {
   return recipientPattern.test(recipientText)
 }
 
-const isBanckAccount = (bankAccount) => {
+const isBankAccount = (bankAccount) => {
   const bankNumber = Number.parseInt(bankAccount, 10)
   return Number.isInteger(bankNumber)
 }
@@ -178,24 +178,36 @@ class RecipientsSearch extends React.Component {
     this.props.onRequestSearch({ query })
     const searchQuery = {}
     let key = 'name'
+    const promiseArray = []
 
     if (query && query.search) {
       if (isRecipientId(query.search)) {
         key = 'id'
-      } else if (isBanckAccount(query.search)) {
+      } else if (isBankAccount(query.search)) {
         key = 'bank_account_id'
       }
+
+      promiseArray.push(this.props.client
+        .recipients
+        .find({
+          external_id: query.search,
+          count: query.count,
+          page: query.offset,
+        }))
 
       searchQuery[key] = query.search
     }
 
     searchQuery.count = query.count
     searchQuery.page = query.offset
-
-    return this.props.client
+    promiseArray.push(this.props.client
       .recipients
-      .find(searchQuery)
-      .then(res => flatten(of(res)))
+      .find(searchQuery))
+
+    return Promise.all(promiseArray)
+      .then(([search, externalId = []]) => (
+        [...flatten(of(search)), ...flatten(of(externalId))]
+      ))
       .then((res) => {
         const result = {
           total: {
