@@ -1126,5 +1126,9 @@
   "cancel_pending_request_text_today_confirm": "Quer cancelar mesmo assim?",
   "cancel_pending_request_text_today": "Atenção: caso queira antecipar nesta mesma data, você precisará criar outro pedido antes das 10:50 de hoje.",
   "cancel_pending_request_text": "Você tem certeza de que deseja cancelar esta antecipação?",
-  "cancel_pending_request_title": "Cancelar antecipação"
+  "cancel_pending_request_title": "Cancelar antecipação",
+  "password_strength": "Força",
+  "password_rules_title": "Sua senha precisa ter:",
+  "password_rules_min_length": "No mínimo {{length}} caracteres",
+  "password_rules_max_length": "No máximo {{length}} caracteres"
 }
