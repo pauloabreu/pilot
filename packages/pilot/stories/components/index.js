@@ -31,6 +31,7 @@ import SidebarSummary from './SidebarSummary'
 import Loader from './Loader'
 import Message from './Message'
 import MessageActions from './MessageActions'
+import PasswordInput from './PasswordInput'
 
 storiesOf('Components|Custom components', module)
   .addDecorator(checkA11y)
@@ -63,3 +64,4 @@ storiesOf('Components|Custom components', module)
   .add('Loader', () => <Loader />)
   .add('Message', () => <Message />)
   .add('Message with actions', () => <MessageActions />)
+  .add('Password Input', () => <PasswordInput />)
