@@ -12,6 +12,8 @@ import {
 } from 'ramda'
 import Form from 'react-vanilla-form'
 
+import PasswordInput from '../../../components/PasswordInput'
+
 import emailValidation from '../../../validation/email'
 import HeaderImage from '../../../components/SelfRegister/HeaderImage'
 import { Message } from '../../../components/Message'
@@ -84,10 +86,10 @@ class SelfRegisterCreateAccount extends Component {
             name="email"
           />
 
-          <FormInput
+          <PasswordInput
             label={t('pages.self_register.create_account.password')}
             name="password"
-            type="password"
+            t={t}
           />
 
           <FormInput
