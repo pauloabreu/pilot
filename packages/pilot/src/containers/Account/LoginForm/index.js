@@ -29,6 +29,7 @@ const LoginContainer = ({
         disabled={loading}
         label={t('email')}
         name="email"
+        type="email"
       />
       <FormInput
         base={base}

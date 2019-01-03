@@ -84,7 +84,8 @@
 }
 
 .login,
-.signIn {
+.signIn,
+.resetPassword {
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -93,6 +94,10 @@
   width: 100%;
 
   & .paragraph {
+    text-transform: uppercase;
+  }
+
+  & .recoveryCall {
     text-transform: uppercase;
   }
 }

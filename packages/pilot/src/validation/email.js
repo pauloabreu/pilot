@@ -1,5 +1,3 @@
-/* eslint-disable no-useless-escape */
-const isEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-/* eslint-enable no-useless-escape */
+import isEmail from 'validator/lib/isEmail'
 
-export default message => value => !isEmail.test(value) && message
+export default message => value => (!value || !isEmail(value)) && message

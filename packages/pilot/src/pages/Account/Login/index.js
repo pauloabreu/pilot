@@ -46,10 +46,15 @@ const enhanced = compose(
   withRouter
 )
 class LoginPage extends PureComponent {
-  // eslint-disable-next-line class-methods-use-this
+  constructor () {
+    super()
+
+    this.handlePasswordRecovery = this.handlePasswordRecovery.bind(this)
+  }
+
   handlePasswordRecovery (e) {
     e.preventDefault()
-    window.location = 'https://dashboard.pagar.me/#/forgot_password'
+    this.props.history.push('/account/password/recovery')
   }
 
   render () {
@@ -76,6 +81,9 @@ class LoginPage extends PureComponent {
 LoginPage.propTypes = {
   base: PropTypes.oneOf(['dark', 'light']).isRequired,
   error: PropTypes.instanceOf(Error),
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
   loading: PropTypes.bool,
   onLogin: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
