@@ -11,6 +11,7 @@ import {
   ifElse,
 } from 'ramda'
 import Form from 'react-vanilla-form'
+import { validate } from 'p4g4rm3'
 
 import PasswordInput from '../../../components/PasswordInput'
 
@@ -19,7 +20,6 @@ import HeaderImage from '../../../components/SelfRegister/HeaderImage'
 import { Message } from '../../../components/Message'
 import requiredValidation from '../../../validation/required'
 import style from '../style.css'
-import { onFormMaskFieldChange } from '../formMaskFieldHelpers'
 
 const equalsString = (t, str1) => ifElse(
   equals(str1),
@@ -36,19 +36,63 @@ class SelfRegisterCreateAccount extends Component {
     super(props)
 
     this.state = {
+      continueActionDisabled: true,
       formData: {
         accountEmail: '',
         password: '',
         ...props.registerData,
       },
+      showPopover: false,
+      validations: validate(''),
     }
 
-    this.handleFormChange = onFormMaskFieldChange.bind(this)
+    this.handleFormChange = this.handleFormChange.bind(this)
+    this.handlePasswordBlur = this.handlePasswordBlur.bind(this)
+    this.handlePasswordFocus = this.handlePasswordFocus.bind(this)
+  }
+
+  handleFormChange (data) {
+    const validations = validate(data.password)
+    const continueActionDisabled = !validations.isValid
+
+    this.setState({
+      continueActionDisabled,
+      formData: data,
+      validations,
+    })
+  }
+
+  handlePasswordFocus () {
+    this.setState({
+      showPopover: true,
+    })
+  }
+
+  handlePasswordBlur () {
+    const {
+      validations: {
+        isValid,
+        score,
+      },
+    } = this.state
+
+    if (isValid && score >= 2) {
+      this.setState({
+        showPopover: false,
+      })
+    }
   }
 
   render () {
     const { onSubmit, t } = this.props
-    const { password } = this.state.formData
+    const {
+      continueActionDisabled,
+      formData: {
+        password,
+      },
+      showPopover,
+      validations,
+    } = this.state
 
     const isRequired = requiredValidation(t('pages.self_register.required_error'))
 
@@ -89,7 +133,11 @@ class SelfRegisterCreateAccount extends Component {
           <PasswordInput
             label={t('pages.self_register.create_account.password')}
             name="password"
+            onBlur={this.handlePasswordBlur}
+            onFocus={this.handlePasswordFocus}
+            showPopover={showPopover}
             t={t}
+            validations={validations}
           />
 
           <FormInput
@@ -99,7 +147,12 @@ class SelfRegisterCreateAccount extends Component {
           />
 
           <span className={style.buttonSubmit}>
-            <Button type="submit" size="huge" fill="gradient">
+            <Button
+              disabled={continueActionDisabled}
+              fill="gradient"
+              size="huge"
+              type="submit"
+            >
               {t('pages.self_register.create_account.continue')}
             </Button>
           </span>
