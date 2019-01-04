@@ -1,8 +1,7 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { contains } from 'ramda'
-import { validate } from 'p4g4rm3'
 
 import {
   FormInput,
@@ -20,127 +19,92 @@ const getStrengthClassnames = ({ score, isValid }) => classnames({
   [style.invalid]: !isValid,
 })
 
-class PasswordInput extends Component {
-  constructor (props) {
-    super(props)
+const renderPopoverContent = (t, validations) => {
+  const isValid = prop => ({
+    [style.valid]: !contains(prop, validations.errors),
+  })
 
-    this.state = {
-      popoverIsVisible: false,
-      validations: validate(props.value),
-      value: props.value,
-    }
+  const minLengthRule = classnames(isValid('min_length'))
+  const maxLengthRule = classnames(isValid('max_length'))
 
-    this.handleChange = this.handleChange.bind(this)
-    this.handleBlur = this.handleBlur.bind(this)
-    this.handleOpenPopover = this.handleOpenPopover.bind(this)
-  }
+  return (
+    <PopoverContent>
+      <div className={style.info}>
+        <strong>{ t('password_rules_title') }</strong>
+        <span className={minLengthRule}>
+          { t('password_rules_min_length', { length: 8 }) }
+        </span>
 
-  componentDidUpdate (prevProps, prevState) {
-    const { onChange } = this.props
+        <span className={maxLengthRule}>
+          { t('password_rules_max_length', { length: 64 }) }
+        </span>
 
-    if ((prevState.value !== this.state.value) && onChange) {
-      onChange(this.state.value)
-    }
-  }
-
-  handleChange ({ target: { value } }) {
-    this.setState({
-      validations: validate(value),
-      value,
-    })
-  }
-
-  handleBlur () {
-    const {
-      validations: {
-        isValid,
-        score,
-      },
-    } = this.state
-
-    if (isValid && score > 3) {
-      this.setState({
-        popoverIsVisible: false,
-      })
-    }
-  }
-
-  handleOpenPopover () {
-    this.setState({
-      popoverIsVisible: true,
-    })
-  }
-
-  renderPopoverContent () {
-    const { validations } = this.state
-    const { t } = this.props
-
-    const isValid = prop => ({
-      [style.valid]: !contains(prop, validations.errors),
-    })
-
-    const minLengthRule = classnames(isValid('min_length'))
-
-    const maxLengthRule = classnames(isValid('max_length'))
-
-    return (
-      <PopoverContent>
-        <div className={style.info}>
-          <strong>{ t('password_rules_title') }</strong>
-          <span className={minLengthRule}>
-            { t('password_rules_min_length', { length: 8 }) }
-          </span>
-
-          <span className={maxLengthRule}>
-            { t('password_rules_max_length', { length: 64 }) }
-          </span>
-
-          <strong>{ t('password_strength') }</strong>
-          <div className={style.strength}>
-            <div className={getStrengthClassnames(validations)} />
-          </div>
+        <strong>{ t('password_strength') }</strong>
+        <div className={style.strength}>
+          <div className={getStrengthClassnames(validations)} />
         </div>
-      </PopoverContent>
-    )
-  }
-
-  render () {
-    const { popoverIsVisible, value } = this.state
-    const { label, placement } = this.props
-
-    return (
-      <div className={style.container}>
-        <Popover
-          content={this.renderPopoverContent()}
-          closeWhenClickOutside={false}
-          onClick={this.handleOpenPopover}
-          placement={placement}
-          visible={popoverIsVisible}
-        >
-          <FormInput
-            label={label}
-            onBlur={this.handleBlur}
-            onChange={this.handleChange}
-            type="password"
-            value={value}
-          />
-        </Popover>
       </div>
-    )
-  }
+    </PopoverContent>
+  )
 }
+
+const PasswordInput = ({
+  label,
+  onBlur,
+  onChange,
+  onFocus,
+  placement,
+  showPopover,
+  validations,
+  value,
+  t,
+}) => (
+  <div className={style.container}>
+    <Popover
+      content={renderPopoverContent(t, validations)}
+      closeWhenClickOutside={false}
+      onClick={onFocus}
+      placement={placement}
+      visible={showPopover}
+    >
+      <FormInput
+        label={label}
+        onBlur={onBlur}
+        onChange={onChange}
+        onFocus={onFocus}
+        type="password"
+        value={value}
+      />
+    </Popover>
+  </div>
+)
 
 PasswordInput.propTypes = {
   label: PropTypes.string.isRequired,
+  onBlur: PropTypes.func.isRequired,
   onChange: PropTypes.func,
+  onFocus: PropTypes.func,
   placement: PropTypes.string,
+  showPopover: PropTypes.bool,
+  validations: PropTypes.shape({
+    errors: PropTypes.array,
+    isValid: PropTypes.bool,
+    score: PropTypes.oneOf([
+      0, 1, 2, 3, 4,
+    ]),
+  }),
   value: PropTypes.string,
   t: PropTypes.func.isRequired,
 }
 
 PasswordInput.defaultProps = {
+  onFocus: null,
   onChange: null,
   placement: 'bottomCenter',
+  showPopover: false,
+  validations: {
+    errors: [],
+  },
   value: '',
 }
 
