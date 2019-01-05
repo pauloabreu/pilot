@@ -184,7 +184,7 @@ const userIsReadOnly = propEq('permission', 'read_only')
 const handleExportDataSuccess = (res, format) => {
   let contentType
   if (format === 'xlsx') {
-    contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    contentType = 'application/ms-excel'
   } else {
     contentType = 'text/csv;charset=utf-8'
   }
