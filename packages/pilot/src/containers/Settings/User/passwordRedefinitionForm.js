@@ -1,6 +1,7 @@
-import Form from 'react-vanilla-form'
-import PropTypes from 'prop-types'
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import Form from 'react-vanilla-form'
+import { validate } from 'p4g4rm3'
 import {
   Alert,
   Button,
@@ -16,9 +17,12 @@ import {
   equals,
   F,
   ifElse,
+  pathOr,
 } from 'ramda'
 import IconWarning from 'emblematic-icons/svg/Warning32.svg'
 import IconInfo from 'emblematic-icons/svg/Info32.svg'
+
+import PasswordInput from '../../../components/PasswordInput'
 
 const required = t => value => (value ? null : t('pages.settings.user.card.access.field_required'))
 const equalsString = (t, str1) => ifElse(
@@ -27,45 +31,62 @@ const equalsString = (t, str1) => ifElse(
   always(t('pages.settings.user.card.access.password_equal'))
 )
 
+const initialFormData = {
+  current_password: '',
+  new_password: '',
+  new_password_confirmation: '',
+}
+
 class PasswordRedefinitionForm extends Component {
   constructor (props) {
     super(props)
 
-    const initalFormData = {
-      current_password: '',
-      new_password: '',
-      new_password_confirmation: '',
-    }
-
     this.state = {
-      initalFormData,
-      currentFormData: initalFormData,
+      initialFormData,
+      currentFormData: initialFormData,
+      saveActionDisabled: true,
+      showPopover: false,
+      validations: validate(initialFormData.new_password),
     }
 
     this.handleCancellation = this.handleCancellation.bind(this)
     this.handleFormChange = this.handleFormChange.bind(this)
     this.handleFormSubmit = this.handleFormSubmit.bind(this)
+    this.handlePasswordBlur = this.handlePasswordBlur.bind(this)
+    this.handlePasswordFocus = this.handlePasswordFocus.bind(this)
   }
 
+  // @TODO: Precisa refatorar isso aqui, porque este método está obsoleto.
   componentWillReceiveProps (nextProps) {
     const { status: { success } } = nextProps
 
     if (success) {
       this.setState({
-        currentFormData: this.state.initalFormData,
+        currentFormData: this.state.initialFormData,
       })
     }
   }
 
   handleFormChange (data) {
+    const validations = validate(pathOr('', ['new_password'], data))
+    const saveActionDisabled = (
+      !validations.isValid ||
+      !equals(data.new_password, data.new_password_confirmation)
+    )
+
     this.setState({
       currentFormData: data,
+      saveActionDisabled,
+      validations,
     })
   }
 
   handleCancellation () {
     this.setState({
       currentFormData: {},
+      saveActionDisabled: true,
+      showPopover: false,
+      validations: validate(initialFormData.new_password),
     })
   }
 
@@ -74,6 +95,28 @@ class PasswordRedefinitionForm extends Component {
       this.props.onSubmit(data)
     }
   }
+
+  handlePasswordFocus () {
+    this.setState({
+      showPopover: true,
+    })
+  }
+
+  handlePasswordBlur () {
+    const {
+      validations: {
+        isValid,
+        score,
+      },
+    } = this.state
+
+    if (isValid && score >= 2) {
+      this.setState({
+        showPopover: false,
+      })
+    }
+  }
+
   render () {
     const {
       status,
@@ -84,6 +127,9 @@ class PasswordRedefinitionForm extends Component {
       currentFormData: {
         new_password: password,
       },
+      saveActionDisabled,
+      showPopover,
+      validations,
     } = this.state
 
     return (
@@ -111,10 +157,14 @@ class PasswordRedefinitionForm extends Component {
                 />
               </Col>
               <Col palm={12} tablet={12} desk={3} tv={3}>
-                <FormInput
+                <PasswordInput
                   label={t('pages.settings.user.card.access.new_password')}
                   name="new_password"
-                  type="password"
+                  onBlur={this.handlePasswordBlur}
+                  onFocus={this.handlePasswordFocus}
+                  showPopover={showPopover}
+                  t={t}
+                  validations={validations}
                 />
               </Col>
               <Col palm={12} tablet={12} desk={3} tv={3}>
@@ -157,6 +207,7 @@ class PasswordRedefinitionForm extends Component {
             {t('pages.settings.user.card.access.button_cancel')}
           </Button>
           <Button
+            disabled={saveActionDisabled}
             type="submit"
             size="default"
             fill="gradient"

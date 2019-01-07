@@ -9325,10 +9325,10 @@ p-try@^1.0.0:
   resolved "https://registry.yarnpkg.com/p-try/-/p-try-1.0.0.tgz#cbc79cdbaf8fd4228e13f621f2b1a237c1b207b3"
   integrity sha1-y8ec26+P1CKOE/Yh8rGiN8GyB7M=
 
-p4g4rm3@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/p4g4rm3/-/p4g4rm3-0.0.2.tgz#7bf61e4f4f72c0266c766d45b8e154729803347c"
-  integrity sha512-aLzJjRDEjaqpG7c8ayG5vWQOa96+aWS64D95OQiXYfIWEzwFYlCbR3NFjmpBwyBmorQWi3Y/ijm8pqNkrG+lKA==
+p4g4rm3@0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/p4g4rm3/-/p4g4rm3-0.1.2.tgz#f8265c9ea23418d472b6ddeda3b87229ea209725"
+  integrity sha512-btk/21puKBAlMQ5/wvqbu82+bf0aqlcv6YVLAtpLUe5CX/6rrFP99/GeVY/aFFHD8DSHydkA1fPDfo9vHBueyw==
   dependencies:
     zxcvbn "^4.4.2"
 
