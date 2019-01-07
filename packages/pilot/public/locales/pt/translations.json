@@ -406,6 +406,7 @@
       "transfer": "Transferência"
     },
     "add_recipient": {
+      "add": "Adicionar recebedor",
       "account_digit": "Dígito verificador da conta",
       "account_name": "Nome da conta",
       "account_type": "Tipo de conta bancária",

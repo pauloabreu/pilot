@@ -1,11 +1,15 @@
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { withRouter } from 'react-router-dom'
+import { compose } from 'ramda'
 
+import AddIcon from 'emblematic-icons/svg/Add32.svg'
 import IconInfo from 'emblematic-icons/svg/Info32.svg'
 import Search32 from 'emblematic-icons/svg/Search32.svg'
 
 import {
   Alert,
+  Button,
   Card,
   CardActions,
   CardContent,
@@ -18,126 +22,154 @@ import {
   Table,
 } from 'former-kit'
 
+
 import style from './style.css'
 import Filter from '../Filter'
 import tableColumns from './tableColumns'
 
-const RecipientsList = ({
-  expandedRows,
-  filterOptions,
-  loading,
-  onDetailsClick,
-  onExpandRow,
-  onFilterChange,
-  onFilterClear,
-  onOrderChange,
-  onPageChange,
-  onRowClick,
-  onSelectRow,
-  pagination,
-  query,
-  rows,
-  selectedRows,
-  t,
-}) => {
-  const columns = tableColumns({ t, onDetailsClick })
-  const handleOrderChange = columnIndex =>
-    onOrderChange(columns[columnIndex].accessor)
-  return (
-    <Grid>
-      <Row>
-        <Col
-          palm={12}
-          tablet={12}
-          desk={12}
-          tv={12}
-        >
-          <Filter
-            disabled={loading}
-            onChange={onFilterChange}
-            onClear={onFilterClear}
-            options={filterOptions}
-            query={query}
-            t={t}
+const enhanced = compose(
+  withRouter
+)
+
+class RecipientsList extends Component {
+  constructor (props) {
+    super(props)
+
+    this.onAddRecipient = this.onAddRecipient.bind(this)
+  }
+
+  onAddRecipient () {
+    this.props.history.replace('/recipients/add')
+  }
+
+  render () {
+    const {
+      expandedRows,
+      filterOptions,
+      loading,
+      onDetailsClick,
+      onExpandRow,
+      onFilterChange,
+      onFilterClear,
+      onOrderChange,
+      onPageChange,
+      onRowClick,
+      onSelectRow,
+      pagination,
+      query,
+      rows,
+      selectedRows,
+      t,
+    } = this.props
+    const columns = tableColumns({ t, onDetailsClick })
+    const handleOrderChange = columnIndex =>
+      onOrderChange(columns[columnIndex].accessor)
+    return (
+      <Grid>
+        <Row>
+          <Col
+            palm={12}
+            tablet={12}
+            desk={12}
+            tv={12}
           >
-            <Input
-              icon={<Search32 width={16} height={16} />}
-              name="search"
-              placeholder={t('pages.recipients.text_search_placeholder')}
-            />
-          </Filter>
-        </Col>
-        <Col
-          palm={12}
-          tablet={12}
-          desk={12}
-          tv={12}
-        >
-          {rows.length <= 0 && !loading &&
-            <Alert
-              icon={<IconInfo height={16} width={16} />}
-              type="info"
+            <Filter
+              disabled={loading}
+              onChange={onFilterChange}
+              onClear={onFilterClear}
+              options={filterOptions}
+              query={query}
+              t={t}
             >
-              <p>
-                <strong>{t('pages.recipients.no_results')}</strong>&nbsp;
-                {t('pages.recipients.try_again')}
-              </p>
-            </Alert>
-          }
-          {rows.length > 0 &&
-            <Card>
-              <CardTitle
-                title={
-                  <h2 className={style.customTitle}>
-                    {t('pages.recipients.title')}
-                  </h2>
-                }
-                subtitle={
-                  <div>
-                    <Pagination
-                      currentPage={pagination.offset}
-                      totalPages={pagination.total}
-                      onPageChange={onPageChange}
-                      disabled={loading}
-                      strings={{
-                        of: t('components.pagination.of'),
-                      }}
-                    />
-                  </div>
-                }
+              <Input
+                icon={<Search32 width={16} height={16} />}
+                name="search"
+                placeholder={t('pages.recipients.text_search_placeholder')}
               />
-              <CardContent>
-                <Table
-                  columns={columns}
-                  disabled={loading}
-                  expandable
-                  expandedRows={expandedRows}
-                  maxColumns={6}
-                  onExpandRow={onExpandRow}
-                  onOrderChange={handleOrderChange}
-                  onRowClick={onRowClick}
-                  onSelectRow={onSelectRow}
-                  rows={rows}
-                  selectedRows={selectedRows}
+            </Filter>
+          </Col>
+          <Col
+            palm={12}
+            tablet={12}
+            desk={12}
+            tv={12}
+          >
+            {rows.length <= 0 && !loading &&
+              <Alert
+                icon={<IconInfo height={16} width={16} />}
+                type="info"
+              >
+                <p>
+                  <strong>{t('pages.recipients.no_results')}</strong>&nbsp;
+                  {t('pages.recipients.try_again')}
+                </p>
+              </Alert>
+            }
+            {rows.length > 0 &&
+              <Card>
+                <CardTitle
+                  title={
+                    <h2 className={style.customTitle}>
+                      {t('pages.recipients.title')}
+                    </h2>
+                  }
+                  subtitle={
+                    <div>
+                      <div className={style.marginRight}>
+                        <Button
+                          type="button"
+                          icon={<AddIcon width={16} height={16} />}
+                          fill="outline"
+                          onClick={this.onAddRecipient}
+                        >
+                          {t('pages.add_recipient.add')}
+                        </Button>
+                      </div>
+                      <Pagination
+                        currentPage={pagination.offset}
+                        totalPages={pagination.total}
+                        onPageChange={onPageChange}
+                        disabled={loading}
+                        strings={{
+                          of: t('components.pagination.of'),
+                        }}
+                      />
+                    </div>
+                  }
                 />
-              </CardContent>
-              <CardActions>
-                <Pagination
-                  currentPage={pagination.offset}
-                  disabled={loading}
-                  onPageChange={onPageChange}
-                  strings={{
-                    of: t('components.pagination.of'),
-                  }}
-                  totalPages={pagination.total}
-                />
-              </CardActions>
-            </Card>
-          }
-        </Col>
-      </Row>
-    </Grid>
-  )
+                <CardContent>
+                  <Table
+                    columns={columns}
+                    disabled={loading}
+                    expandable
+                    expandedRows={expandedRows}
+                    maxColumns={6}
+                    onExpandRow={onExpandRow}
+                    onOrderChange={handleOrderChange}
+                    onRowClick={onRowClick}
+                    onSelectRow={onSelectRow}
+                    rows={rows}
+                    selectedRows={selectedRows}
+                  />
+                </CardContent>
+                <CardActions>
+                  <Pagination
+                    currentPage={pagination.offset}
+                    disabled={loading}
+                    onPageChange={onPageChange}
+                    strings={{
+                      of: t('components.pagination.of'),
+                    }}
+                    totalPages={pagination.total}
+                  />
+                </CardActions>
+              </Card>
+            }
+          </Col>
+        </Row>
+      </Grid>
+    )
+  }
 }
 
 RecipientsList.propTypes = {
@@ -186,6 +218,9 @@ RecipientsList.propTypes = {
   })).isRequired,
   selectedRows: PropTypes.arrayOf(PropTypes.number).isRequired,
   t: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    replace: PropTypes.func,
+  }).isRequired,
 }
 
 RecipientsList.defaultProps = {
@@ -194,4 +229,4 @@ RecipientsList.defaultProps = {
   },
 }
 
-export default RecipientsList
+export default enhanced(RecipientsList)
