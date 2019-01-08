@@ -7,6 +7,9 @@ jobs:
 
     working_directory: ~/repo
 
+    environment:
+        TZ: America/Sao_Paulo
+
     steps:
       - checkout
 
