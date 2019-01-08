@@ -127,7 +127,7 @@ Operations.propTypes = {
   })).isRequired,
   currentPage: PropTypes.number.isRequired,
   emptyMessage: PropTypes.string.isRequired,
-  onExportData: PropTypes.node,
+  onExportData: PropTypes.func.isRequired,
   disabled: PropTypes.bool,
   ofLabel: PropTypes.string.isRequired,
   onPageChange: PropTypes.func.isRequired,
@@ -152,7 +152,6 @@ Operations.propTypes = {
 }
 
 Operations.defaultProps = {
-  onExportData: null,
   disabled: false,
 }
 
