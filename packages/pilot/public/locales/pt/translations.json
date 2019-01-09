@@ -1126,5 +1126,7 @@
   "cancel_pending_request_text_today_confirm": "Quer cancelar mesmo assim?",
   "cancel_pending_request_text_today": "Atenção: caso queira antecipar nesta mesma data, você precisará criar outro pedido antes das 10:50 de hoje.",
   "cancel_pending_request_text": "Você tem certeza de que deseja cancelar esta antecipação?",
-  "cancel_pending_request_title": "Cancelar antecipação"
+  "cancel_pending_request_title": "Cancelar antecipação",
+  "transactions_export_table": "Exportar tabela",
+  "transactions_export_to": "Exportar para:"
 }

@@ -183,6 +183,15 @@ const TransactionsList = ({
                 }
                 subtitle={
                   <div className={style.toolBar}>
+                    <ExportData
+                      exportOptions={getExportOptions(onExport)}
+                      icon={<Download32 width={12} height={12} />}
+                      placement="bottomEnd"
+                      relevance="low"
+                      size="tiny"
+                      subtitle={t('transactions_export_to')}
+                      title={t('transactions_export_table')}
+                    />
                     <SegmentedSwitch
                       disabled={loading}
                       name="view-mode"
