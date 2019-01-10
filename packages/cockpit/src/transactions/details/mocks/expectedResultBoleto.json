@@ -74,6 +74,7 @@
       "mdr_amount": 0,
       "method": "boleto",
       "net_amount": 0,
+      "authorized_amount": 1000,
       "paid_amount": 0,
       "refund_amount": 0
     },
@@ -82,6 +83,7 @@
     "reason_code": null,
     "recipients": [],
     "risk_level": "unknown",
+    "referer": "api_key",
     "soft_descriptor": null,
     "status_reason": "acquirer",
     "status": "waiting_payment",
