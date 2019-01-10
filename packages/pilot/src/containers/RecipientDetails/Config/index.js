@@ -173,13 +173,10 @@ class RecipientDetailConfig extends Component {
     if (!bankAccount.id) {
       bankAccount.id = accounts[0].id
     }
-    console.log('banco', bankAccount)
-    console.log('muitas contas', accounts)
+
     const selectedAccount = accounts.find(account => (
       `${account.id}` === `${bankAccount.id}`
     )) || {}
-
-    console.log('selectedAccount', selectedAccount)
 
     return (
       `${selectedAccount.name} - ${selectedAccount.bank} - ${selectedAccount.agency} - ${selectedAccount.number}`
@@ -252,6 +249,7 @@ class RecipientDetailConfig extends Component {
     )
   }
 }
+
 
 RecipientDetailConfig.propTypes = {
   anticipation: PropTypes.shape({

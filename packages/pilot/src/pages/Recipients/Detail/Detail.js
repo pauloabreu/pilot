@@ -5,39 +5,35 @@ import { translate } from 'react-i18next'
 import withRouter from 'react-router-dom/withRouter'
 import { connect } from 'react-redux'
 import { compose } from 'ramda'
-
 import moment from 'moment'
-import mock from '../../../../src/containers/Balance/mock.json'
 
 import DetailRecipient from '../../../../src/containers/RecipientDetails'
 
 const mockBalance = {
-  dates: {
-    end: moment().add(1, 'month'),
-    start: moment(),
-  },
-  ...mock.result,
-  query: {
-    dates: {
-      end: moment().add(1, 'month'),
-      start: moment(),
-    },
-    page: 1,
-  },
   total: {
     net: 1000000,
     outcoming: 1000000,
     outgoing: 1000000,
   },
-  currentPage: 1,
   disabled: false,
-  onAnticipationClick: () => {},
-  onCancel: () => {},
-  onCancelRequestClick: () => {},
-  onFilterClick: () => {},
-  onPageChange: () => {},
-  onSave: () => {},
-  onWithdrawClick: () => {},
+  onAnticipationClick: () => {
+    console.log('onAnticipationClick')
+  },
+  onCancel: () => {
+    console.log('onCancel')
+  },
+  onCancelRequestClick: () => {
+    console.log('onCancelRequestClick')
+  },
+  onPageChange: () => {
+    console.log('onPageChange')
+  },
+  onSave: () => {
+    console.log('onSave')
+  },
+  onWithdrawClick: () => {
+    console.log('onWithdrawClick')
+  },
 }
 
 const mapStateToProps = (state) => {
@@ -60,13 +56,21 @@ class DetailRecipientPage extends Component {
     super(props)
     this.state = {
       anticipationLimit: 0,
+      currentPage: 1,
+      dates: {
+        // TODO: Change back to default 1 month period
+        start: moment('2017-01-01'),
+        end: moment('2019-01-01'),
+      },
       error: false,
       loading: true,
     }
 
     this.fetchAccounts = this.fetchAccounts.bind(this)
+    this.fetchBalance = this.fetchBalance.bind(this)
     this.fetchRecipientData = this.fetchRecipientData.bind(this)
     this.fetchAnticipationLimit = this.fetchAnticipationLimit.bind(this)
+    this.onDateFilter = this.onDateFilter.bind(this)
     this.onSaveAnticipation = this.onSaveAnticipation.bind(this)
     this.onSaveTransfer = this.onSaveTransfer.bind(this)
     this.onSaveBankAccount = this.onSaveBankAccount.bind(this)
@@ -74,21 +78,26 @@ class DetailRecipientPage extends Component {
   }
 
   componentWillMount () {
+    const { dates, currentPage } = this.state
+
     const limitPromise = this.fetchAnticipationLimit()
     const dataPromise = this.fetchRecipientData()
+    const balancePromise = this.fetchBalance(dates, currentPage)
 
     const fetchPromises = [
       dataPromise,
       limitPromise,
+      balancePromise,
     ]
 
     Promise.all(fetchPromises)
-      .then(([recipientData, anticipationLimit]) => {
+      .then(([recipientData, anticipationLimit, balance]) => {
         this.setState({
           ...this.state,
           anticipationLimit,
           loading: false,
           recipientData,
+          balance,
         })
       })
       .catch((error) => {
@@ -96,6 +105,18 @@ class DetailRecipientPage extends Component {
           ...this.state,
           error,
           loading: false,
+        })
+      })
+  }
+
+  onDateFilter (dates) {
+    const firstPage = 1
+    this.fetchBalance(dates, firstPage)
+      .then((balance) => {
+        this.setState({
+          balance,
+          dates,
+          currentPage: firstPage,
         })
       })
   }
@@ -237,15 +258,38 @@ class DetailRecipientPage extends Component {
       .then(limits => limits.maximum.amount)
   }
 
+  fetchBalance (dates, page) {
+    const { client } = this.props
+    const { id } = this.props.match.params
+    const query = { dates, page }
+
+    return client.balance.data(id, query)
+      .then(response => response.result)
+  }
+
   render () {
     const {
       anticipationLimit,
+      balance,
+      currentPage,
+      dates,
       error,
       loading,
       recipientData,
     } = this.state
 
-    if (loading || error) return null
+    if (loading) {
+      // TODO: Mensagem de loading
+      console.log('Loading...')
+      return null
+    }
+
+    if (error) {
+      // TODO: Mensagem de erro
+      console.error('Erro durante fetch:')
+      console.error(error)
+      return null
+    }
 
     const anticipation = {
       available: anticipationLimit,
@@ -258,8 +302,12 @@ class DetailRecipientPage extends Component {
         <DetailRecipient
           informationProps={recipientData.informationData}
           balanceProps={{
-            anticipation,
             ...mockBalance,
+            ...balance,
+            anticipation,
+            currentPage,
+            dates,
+            onFilterClick: this.onDateFilter,
           }}
           configurationProps={{
             ...recipientData.configurationData,

@@ -1,8 +1,6 @@
 import { formatHeaderData } from './formatRecipient'
 
 function formatAnTConfig (data) {
-  console.log('não formatado', data)
-
   const companyData = formatHeaderData(data)
 
   let identification = {
@@ -81,12 +79,12 @@ function formatAnTConfig (data) {
     anticipationDays: data.automatic_anticipation_days,
     transferEnabled: data.transfer_enabled,
     transferInterval: data.transfer_interval,
-    transferDay: data.transfer_day.toString(),
+    transferDay: (data.transfer_day) ? data.transfer_day.toString() : '',
     transferWeekday: '',
   }
 
   let transfer = {
-    transferDay: data.transfer_day.toString(),
+    transferDay: (data.transfer_day) ? data.transfer_day.toString() : '',
     transferEnabled: data.transfer_enabled,
     transferInterval: data.transfer_interval,
     transferWeekday: '',
@@ -106,12 +104,12 @@ function formatAnTConfig (data) {
     configuration = {
       ...configuration,
       transferDay: '',
-      transferWeekday: data.transfer_day.toString(),
+      transferWeekday: (data.transfer_day) ? data.transfer_day.toString() : '',
     }
     transfer = {
       ...configuration,
       transferDay: '',
-      transferWeekday: data.transfer_day.toString(),
+      transferWeekday: (data.transfer_day) ? data.transfer_day.toString() : '',
     }
   }
 
@@ -195,8 +193,6 @@ function formatAnTConfig (data) {
     informationData,
     configurationData,
   }
-
-  console.log('formatado', dadosFormatados)
 
   return dadosFormatados
 }
