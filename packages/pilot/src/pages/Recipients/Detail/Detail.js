@@ -64,12 +64,17 @@ class DetailRecipientPage extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      loading: false,
+      anticipation: {
+        available: 0,
+        error: false,
+        loading: true,
+      },
+      error: false,
+      loading: true,
     }
 
     this.fetchAccounts = this.fetchAccounts.bind(this)
-    this.handleRecipientData = this.handleRecipientData.bind(this)
-    this.requestClient = this.requestClient.bind(this)
+    this.fetchRecipientData = this.fetchRecipientData.bind(this)
     this.onSaveAnticipation = this.onSaveAnticipation.bind(this)
     this.onSaveTransfer = this.onSaveTransfer.bind(this)
     this.onSaveBankAccount = this.onSaveBankAccount.bind(this)
@@ -77,7 +82,21 @@ class DetailRecipientPage extends Component {
   }
 
   componentWillMount () {
-    this.handleRecipientData()
+    this.fetchRecipientData()
+      .then((recipientData) => {
+        this.setState({
+          ...this.state,
+          loading: false,
+          recipientData,
+        })
+      })
+      .catch((error) => {
+        this.setState({
+          ...this.state,
+          error,
+          loading: false,
+        })
+      })
   }
 
   onSaveAnticipation (getData) {
@@ -129,10 +148,8 @@ class DetailRecipientPage extends Component {
     let operation = Promise.resolve()
 
     if (getData.id) {
-      console.log('vai atualizar')
       operation = client.recipient.update(id, { configuration: getData })
     } else if (getData.bank) {
-      console.log('vai criar uma bank account nova')
       const { documentType } = this.state.recipientData.informationData.identification
       operation = client.recipient.createNewAccount({
         identification: {
@@ -160,13 +177,10 @@ class DetailRecipientPage extends Component {
             },
           })
         })
-    } else {
-      console.error('ERRO ERRO ERRO', getData)
     }
 
     return operation
       .then((data) => {
-        console.log('recipient update', data)
         this.setState({
           ...this.state,
           recipientData: {
@@ -190,72 +204,61 @@ class DetailRecipientPage extends Component {
     })
   }
 
-  handleRecipientData () {
-    this.setState({
-      loading: true,
-    }, () => {
-      this.requestClient()
-    })
-  }
-
   fetchAccounts (document) {
     return this.props.client.recipient.bankAccount(document)
   }
 
-  requestClient () {
+  fetchRecipientData () {
     const { client } = this.props
     const { id } = this.props.match.params
 
     let recipient
 
-    client.recipient.detail(id)
+    return client.recipient.detail(id)
       .then((result) => {
         recipient = result
         const recipientIdentification = recipient.informationData.identification
         return this.fetchAccounts(recipientIdentification)
       })
-      .then((accounts) => {
-        this.setState({
-          ...this.state,
-          recipientData: {
-            ...recipient,
-            configurationData: {
-              ...recipient.configurationData,
-              ...accounts,
-            },
-          },
-          loading: false,
-        })
-      })
-      .catch((error) => {
-        this.setState({
-          error,
-          loading: false,
-        })
-      })
+      .then(accounts => ({
+        ...recipient,
+        configurationData: {
+          ...recipient.configurationData,
+          ...accounts,
+        },
+      }))
   }
 
   render () {
-    if (this.state.recipientData) {
-      return (
-        <Card>
-          <DetailRecipient
-            informationProps={this.state.recipientData.informationData}
-            balanceProps={mockBalance}
-            configurationProps={{
-              ...this.state.recipientData.configurationData,
-              onSaveAnticipation: this.onSaveAnticipation,
-              onSaveTransfer: this.onSaveTransfer,
-              onSaveBankAccount: this.onSaveBankAccount,
-              onCancel: this.onCancel,
-            }}
-            recipient={this.state.recipientData.companyData}
-            t={this.props.t}
-          />
-        </Card>
-      )
-    }
-    return null
+    const {
+      anticipation,
+      error,
+      loading,
+      recipientData,
+    } = this.state
+
+    if (loading || error) return null
+
+    return (
+      <Card>
+        <DetailRecipient
+          informationProps={recipientData.informationData}
+          balanceProps={{
+            anticipation,
+            ...mockBalance,
+          }}
+          configurationProps={{
+            ...recipientData.configurationData,
+            onSaveAnticipation: this.onSaveAnticipation,
+            onSaveTransfer: this.onSaveTransfer,
+            onSaveBankAccount: this.onSaveBankAccount,
+            onCancel: this.onCancel,
+          }}
+          recipient={recipientData.companyData}
+          t={this.props.t}
+        />
+      </Card>
+    )
   }
 }
 
