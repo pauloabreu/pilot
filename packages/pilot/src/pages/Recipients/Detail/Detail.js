@@ -12,11 +12,6 @@ import mock from '../../../../src/containers/Balance/mock.json'
 import DetailRecipient from '../../../../src/containers/RecipientDetails'
 
 const mockBalance = {
-  anticipation: {
-    available: 10000,
-    error: false,
-    loading: false,
-  },
   dates: {
     end: moment().add(1, 'month'),
     start: moment(),
@@ -64,17 +59,14 @@ class DetailRecipientPage extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      anticipation: {
-        available: 0,
-        error: false,
-        loading: true,
-      },
+      anticipationLimit: 0,
       error: false,
       loading: true,
     }
 
     this.fetchAccounts = this.fetchAccounts.bind(this)
     this.fetchRecipientData = this.fetchRecipientData.bind(this)
+    this.fetchAnticipationLimit = this.fetchAnticipationLimit.bind(this)
     this.onSaveAnticipation = this.onSaveAnticipation.bind(this)
     this.onSaveTransfer = this.onSaveTransfer.bind(this)
     this.onSaveBankAccount = this.onSaveBankAccount.bind(this)
@@ -82,10 +74,19 @@ class DetailRecipientPage extends Component {
   }
 
   componentWillMount () {
-    this.fetchRecipientData()
-      .then((recipientData) => {
+    const limitPromise = this.fetchAnticipationLimit()
+    const dataPromise = this.fetchRecipientData()
+
+    const fetchPromises = [
+      dataPromise,
+      limitPromise,
+    ]
+
+    Promise.all(fetchPromises)
+      .then(([recipientData, anticipationLimit]) => {
         this.setState({
           ...this.state,
+          anticipationLimit,
           loading: false,
           recipientData,
         })
@@ -229,15 +230,28 @@ class DetailRecipientPage extends Component {
       }))
   }
 
+  fetchAnticipationLimit () {
+    const { client } = this.props
+    const { id } = this.props.match.params
+    return client.recipient.anticipationLimits(id)
+      .then(limits => limits.maximum.amount)
+  }
+
   render () {
     const {
-      anticipation,
+      anticipationLimit,
       error,
       loading,
       recipientData,
     } = this.state
 
     if (loading || error) return null
+
+    const anticipation = {
+      available: anticipationLimit,
+      error,
+      loading,
+    }
 
     return (
       <Card>
