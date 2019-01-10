@@ -261,6 +261,7 @@ const transactionSpec = {
   id: prop('id'),
   metadata: prop('metadata'),
   payment: {
+    authorized_amount: prop('authorized_amount'),
     cost_amount: prop('cost'),
     installments: prop('installments'),
     method: prop('payment_method'),
@@ -283,6 +284,7 @@ const transactionSpec = {
     prop('postback_url')
   ),
   risk_level: prop('risk_level'),
+  referer: prop('referer'),
   soft_descriptor: prop('soft_descriptor'),
   status: prop('status'),
   status_reason: ifElse(
