@@ -98,9 +98,5 @@
         font-size: 16px!important;
       }
     }
-
-    &:last-child{
-      display: none!important;
-    }
   }
 }
