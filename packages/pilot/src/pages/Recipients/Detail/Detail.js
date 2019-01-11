@@ -10,9 +10,6 @@ import moment from 'moment'
 import DetailRecipient from '../../../../src/containers/RecipientDetails'
 
 const mockBalance = {
-  onAnticipationClick: () => {
-    console.log('onAnticipationClick')
-  },
   onCancel: () => {
     console.log('onCancel')
   },
@@ -75,6 +72,7 @@ class DetailRecipientPage extends Component {
     this.onSaveTransfer = this.onSaveTransfer.bind(this)
     this.onSaveBankAccount = this.onSaveBankAccount.bind(this)
     this.onCancel = this.onCancel.bind(this)
+    this.sendToAnticipationPage = this.sendToAnticipationPage.bind(this)
   }
 
   componentWillMount () {
@@ -229,6 +227,12 @@ class DetailRecipientPage extends Component {
     })
   }
 
+  sendToAnticipationPage () {
+    const { history } = this.props
+    const { id } = this.props.match.params
+    history.push(`/anticipation/${id}`)
+  }
+
   fetchAccounts (document) {
     return this.props.client.recipient.bankAccount(document)
   }
@@ -321,6 +325,7 @@ class DetailRecipientPage extends Component {
             disabled: loading,
             total,
             onFilterClick: this.onDateFilter,
+            onAnticipationClick: this.sendToAnticipationPage,
           }}
           configurationProps={{
             ...recipientData.configurationData,
@@ -344,6 +349,7 @@ DetailRecipientPage.propTypes = {
       bankAccount: PropTypes.func.isRequired,
     }).isRequired,
   }).isRequired,
+  history: PropTypes.func.isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string.isRequired,
