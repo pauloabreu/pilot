@@ -32,3 +32,25 @@
   margin: calc(var(--spacing-small) - 5px) 0;
   width: 100px;
 }
+
+@media print {
+  .title {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  .subtitle {
+    justify-content: flex-start!important;
+  }
+  .amount {
+    flex-direction: row;
+    justify-content: flex-start;
+  
+    & small {
+      display: inline-block!important;
+    }
+  
+    & h3 {
+      display: inline-block!important;
+    }
+  }
+}
