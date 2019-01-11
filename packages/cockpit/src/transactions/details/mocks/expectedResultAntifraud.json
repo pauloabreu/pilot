@@ -91,6 +91,7 @@
       "mdr_amount": 0,
       "method": "credit_card",
       "net_amount": -70,
+      "authorized_amount": 21050,
       "paid_amount": 0,
       "refund_amount": 0
     },
@@ -99,6 +100,7 @@
     "reason_code": null,
     "recipients": [],
     "risk_level": "high",
+    "referer": "api_key",
     "soft_descriptor": null,
     "status": "pending_review",
     "status_reason": "antifraud",

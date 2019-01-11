@@ -114,12 +114,13 @@ const CaptureForm = ({
                 alignItems="center"
                 justifyContent="space-between"
               >
-                <span>
+                <span className={style.captureWarning}>
                   {t('pages.capture.token_capture_warning')}
+                  {' '}
+                  <a href="https://google.com">
+                    {t('pages.capture.token_capture_link')}
+                  </a>
                 </span>
-                <a href="https://google.com">
-                  {t('pages.capture.token_capture_link')}
-                </a>
               </Flexbox>
             </Alert>
           </Col>

@@ -31,6 +31,7 @@ import installmentTableColumns from '../../../components/RecipientSection/instal
 import ManualReview from '../../ManualReview'
 import TransactionDetailsContainer from '../../../containers/TransactionDetails'
 import Refund from '../../Refund'
+import Capture from '../../Capture'
 
 const mapStateToProps = ({
   account: {
@@ -180,6 +181,7 @@ class TransactionDetails extends Component {
         transaction: {},
       },
       riskLevelsLabels: getRiskLevelsLabels(t),
+      showCapture: false,
       showManualReview: false,
       showRefund: false,
       showReprocess: false,
@@ -188,6 +190,8 @@ class TransactionDetails extends Component {
 
     this.handleAlertDismiss = this.handleAlertDismiss.bind(this)
     this.handleAlertDismiss = this.handleAlertDismiss.bind(this)
+    this.handleCapture = this.handleCapture.bind(this)
+    this.handleCloseCapture = this.handleCloseCapture.bind(this)
     this.handleCloseManualReview = this.handleCloseManualReview.bind(this)
     this.handleCloseRefund = this.handleCloseRefund.bind(this)
     this.handleCopyBoletoUrlClick = this.handleCopyBoletoUrlClick.bind(this)
@@ -240,6 +244,14 @@ class TransactionDetails extends Component {
   handleAlertDismiss () {
     const { history } = this.props
     history.push('/')
+  }
+
+  handleCapture () {
+    this.setState({ showCapture: true })
+  }
+
+  handleCloseCapture () {
+    this.setState({ showCapture: false })
   }
 
   handleCopyBoletoUrlClick () {
@@ -337,6 +349,7 @@ class TransactionDetails extends Component {
       paymentBoletoLabels,
       paymentCardLabels,
       riskLevelsLabels,
+      showCapture,
       showReprocess,
       result,
       transactionDetailsLabels,
@@ -435,6 +448,7 @@ class TransactionDetails extends Component {
           installmentColumns={installmentColumns}
           metadataTitle={t('pages.transaction.metadata')}
           nextTransactionId={nextTransactionId}
+          onCapture={this.handleCapture}
           onCopyBoletoUrl={this.handleCopyBoletoUrlClick}
           onDismissAlert={this.handleAlertDismiss}
           onManualReviewApprove={this.handleManualReviewApprove}
@@ -447,6 +461,7 @@ class TransactionDetails extends Component {
           paymentBoletoLabels={paymentBoletoLabels}
           paymentCardLabels={paymentCardLabels}
           permissions={{
+            capture: permission !== 'read_only',
             manualReview: permission !== 'read_only',
             refund: permission !== 'read_only',
             reprocess: permission !== 'read_only',
@@ -458,6 +473,16 @@ class TransactionDetails extends Component {
           transaction={transaction}
           transactionDetailsLabels={transactionDetailsLabels}
         />
+        {showCapture &&
+          <Capture
+            isFromCheckout={transaction.referer === 'encryption_key'}
+            isOpen={showCapture}
+            onClose={this.handleCloseCapture}
+            onSuccess={this.handleUpdate}
+            t={t}
+            transaction={transaction}
+          />
+        }
         {showManualReview &&
           <ManualReview
             action={manualReviewAction}

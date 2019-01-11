@@ -100,6 +100,7 @@
       "installments": 12,
       "method": "credit_card",
       "net_amount": 985172498,
+      "authorized_amount": 985172498,
       "paid_amount": 985172498,
       "refund_amount": 0,
       "mdr_amount": 0
@@ -626,6 +627,7 @@
       }
     ],
     "reason_code": "84",
+    "referer": "api_key",
     "soft_descriptor": null,
     "status_reason": "acquirer",
     "status": "chargedback",

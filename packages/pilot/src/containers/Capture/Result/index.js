@@ -39,7 +39,7 @@ const Result = ({
 }) => (
   <Fragment>
     <ModalContent>
-      { status === 'current'
+      { status !== 'error'
         ?
           <div>
             <div className={style.image}>
@@ -96,7 +96,7 @@ const Result = ({
     </ModalContent>
     <Spacing />
     <ModalActions>
-      { status === 'current'
+      { status !== 'error'
         ?
           <Button
             fill="outline"
@@ -132,6 +132,7 @@ Result.propTypes = {
   status: PropTypes.oneOf([
     'current',
     'error',
+    'success',
   ]).isRequired,
   statusMessage: PropTypes.string,
   t: PropTypes.func.isRequired,

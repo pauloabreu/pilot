@@ -8,3 +8,7 @@
   font-weight: var(--title-font-weight);
   margin: 0;
 }
+
+.captureWarning {
+  font-size: var(--caption-font-size);
+}
