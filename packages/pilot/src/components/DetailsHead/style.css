@@ -57,13 +57,15 @@
   }
 }
 
-
 @media print {
+  /* stylelint-disable */
+  
   * {
     line-height: 1!important;
   }
 
   .content {
+    flex: 1 0 100%;
     display: block!important;
     width: 100%!important;
     text-align: center!important;
@@ -99,4 +101,6 @@
       }
     }
   }
+
+  /* stylelint-enable */
 }

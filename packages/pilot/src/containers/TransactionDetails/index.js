@@ -649,7 +649,7 @@ class TransactionDetails extends Component {
 
     return (
       <Grid className={style.grid}>
-        <Row stretch>
+        <Row stretch className={style.transactionInfo}>
           <Col
             desk={12}
             tv={12}
@@ -765,9 +765,9 @@ class TransactionDetails extends Component {
             tablet={12}
             tv={9}
           >
-            <Grid>
+            <Grid className={style.detailsInfo}>
               {!isEmptyOrNull(recipients) &&
-                <Row>
+                <Row className={style.recipientsInfo}>
                   <Col
                     desk={12}
                     palm={12}
@@ -796,7 +796,7 @@ class TransactionDetails extends Component {
                 </Row>
               }
               {!isEmptyOrNull(customer) &&
-                <Row>
+                <Row className={style.customerInfo}>
                   <Col
                     desk={12}
                     palm={12}
@@ -811,7 +811,7 @@ class TransactionDetails extends Component {
                   </Col>
                 </Row>
               }
-              <Row>
+              <Row className={style.transactionCardInfo}>
                 <Col
                   desk={12}
                   palm={12}

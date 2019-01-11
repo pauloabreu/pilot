@@ -63,7 +63,9 @@
     font-size: 12px;
   }
 }
+
 @media print {
+  /* stylelint-disable */
   .card {
     text-align: center;
     background: none;
@@ -104,4 +106,6 @@
       font-size: 16px;
     }
   }
+
+  /* stylelint-enable */
 }

@@ -34,6 +34,8 @@
 }
 
 @media print {
+
+  /* stylelint-disable */
   .content {
     border-bottom: 1px solid #AAAAAA; 
   }
@@ -56,4 +58,6 @@
       display: inline-block!important;
     }
   }
+
+  /* stylelint-enable */
 }

@@ -74,6 +74,8 @@
 }
 
 @media print {
+
+  /* stylelint-disable */
   .card {
     text-align: center;
     background: none;
@@ -132,4 +134,5 @@
     }
   }
 
+  /* stylelint-enable */
 }

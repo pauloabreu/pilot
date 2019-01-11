@@ -31,6 +31,9 @@
       box-shadow: none;
       color: #000000;
     }
+    & .startAlign {
+      padding-left: 0;  
+    }
   }
 
   .paymentInfo {
@@ -46,6 +49,39 @@
         flex-shrink: 0;
         flex-basis: 150px;
       }
+  }
+  
+  .detailsInfo {
+    flex-direction: column-reverse;
+    justify-content: space-between;
+  }
+
+  .recipientsInfo {
+    padding: 0;
+    margin: 0;
+
+  }
+
+  .customerInfo {
+    order:1;
+
+    padding: 0;
+    margin: 0;
+
+  }
+
+  .transactionCardInfo {
+    padding: 0;
+    margin: 0;
+  }
+
+  .transactionInfo {
+    & > div {
+      flex-grow: 1;
+      flex-shrink: 0;
+      flex-basis: 150px;
+      flex: 1 0 100%;
+    }
   }
 
   aside + div > header,
