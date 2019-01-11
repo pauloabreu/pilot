@@ -29,9 +29,19 @@
     box-shadow: none!important;
     font-family: Arial, Helvetica, sans-serif;
   }
-  
-  div {
-    display: block!important;
+  .paymentInfo {
+      flex-wrap: wrap; 
+      display: flex!important;
+      & > div:first-child {
+        width: 100%;
+        display: block;
+        flex: 1 0 100%;
+      }
+      & > div {
+        flex-grow: 1;
+        flex-shrink: 0;
+        flex-basis: 150px;
+      }
   }
 
   aside + div > header,

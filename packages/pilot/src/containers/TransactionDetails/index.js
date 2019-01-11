@@ -643,7 +643,7 @@ class TransactionDetails extends Component {
 
         {this.renderReprocessAlerts()}
 
-        <Row stretch>
+        <Row stretch className={style.paymentInfo}>
           <Col
             desk={3}
             palm={12}
