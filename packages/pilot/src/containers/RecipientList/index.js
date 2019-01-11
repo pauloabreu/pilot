@@ -108,7 +108,7 @@ class RecipientList extends Component {
       totalTitle,
     } = this.props
     return (
-      <Fragment>
+      <div className={style.recipientList}>
         <CardTitle
           className={style.titleContainer}
           title={title}
@@ -127,7 +127,7 @@ class RecipientList extends Component {
             {this.renderRecipientList()}
           </div>
         </CardContent>
-      </Fragment>
+      </div>
     )
   }
 

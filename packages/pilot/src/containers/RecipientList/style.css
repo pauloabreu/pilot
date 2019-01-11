@@ -1,3 +1,5 @@
+@import "former-kit-skin-pagarme/dist/styles/colors.css";
+
 .titleContainer {
   padding-bottom: 0;
 }
@@ -33,3 +35,62 @@
 .recipient + .recipient {
   margin-top: 24px;
 }
+
+
+@media print {
+
+  .recipientList {
+    page-break-before: always;
+  }
+
+  .recipient {
+    background-color: var(--color-white);
+
+    & table tr,
+    & table tr th {
+      background-color: var(--color-white);
+      color: var(--color-black);
+      padding: 0px;
+      text-align: center;
+
+      &:after {
+        height: 100%;
+      }
+
+      & > div {
+        text-align: center;
+        justify-content: center;
+        padding-bottom: 0px;
+      }
+    }
+
+    & table tr td {
+      text-align: center;
+
+      & > span:before {
+        right: 50%!important;
+        transform: translate(50%, 0)!important;
+      }
+
+      &:not(:first-child):after {
+        content: "";
+        border-right: solid 1px #e1e5e8;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 50%;
+        transform: translate(0, -50%);
+      }
+    }
+
+    & table {
+      border: none;
+
+      & > thead > tr {
+        border: none;
+      }
+    }
+  }
+}
+
+
