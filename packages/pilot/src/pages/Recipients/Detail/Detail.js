@@ -10,12 +10,6 @@ import moment from 'moment'
 import DetailRecipient from '../../../../src/containers/RecipientDetails'
 
 const mockBalance = {
-  total: {
-    net: 1000000,
-    outcoming: 1000000,
-    outgoing: 1000000,
-  },
-  disabled: false,
   onAnticipationClick: () => {
     console.log('onAnticipationClick')
   },
@@ -62,6 +56,11 @@ class DetailRecipientPage extends Component {
         start: moment('2017-01-01'),
         end: moment('2019-01-01'),
       },
+      total: {
+        net: 0,
+        outcoming: 0,
+        outgoing: 0,
+      },
       error: false,
       loading: true,
     }
@@ -70,6 +69,7 @@ class DetailRecipientPage extends Component {
     this.fetchBalance = this.fetchBalance.bind(this)
     this.fetchRecipientData = this.fetchRecipientData.bind(this)
     this.fetchAnticipationLimit = this.fetchAnticipationLimit.bind(this)
+    this.fetchBalanceTotal = this.fetchBalanceTotal.bind(this)
     this.onDateFilter = this.onDateFilter.bind(this)
     this.onSaveAnticipation = this.onSaveAnticipation.bind(this)
     this.onSaveTransfer = this.onSaveTransfer.bind(this)
@@ -83,21 +83,24 @@ class DetailRecipientPage extends Component {
     const limitPromise = this.fetchAnticipationLimit()
     const dataPromise = this.fetchRecipientData()
     const balancePromise = this.fetchBalance(dates, currentPage)
+    const balanceTotalPromise = this.fetchBalanceTotal(dates)
 
     const fetchPromises = [
       dataPromise,
       limitPromise,
       balancePromise,
+      balanceTotalPromise,
     ]
 
     Promise.all(fetchPromises)
-      .then(([recipientData, anticipationLimit, balance]) => {
+      .then(([recipientData, anticipationLimit, balance, total]) => {
         this.setState({
           ...this.state,
           anticipationLimit,
           loading: false,
           recipientData,
           balance,
+          total,
         })
       })
       .catch((error) => {
@@ -267,6 +270,13 @@ class DetailRecipientPage extends Component {
       .then(response => response.result)
   }
 
+  fetchBalanceTotal (dates) {
+    const { client } = this.props
+    const { id } = this.props.match.params
+    const query = { dates }
+    return client.balance.total(id, query)
+  }
+
   render () {
     const {
       anticipationLimit,
@@ -276,6 +286,7 @@ class DetailRecipientPage extends Component {
       error,
       loading,
       recipientData,
+      total,
     } = this.state
 
     if (loading) {
@@ -307,6 +318,8 @@ class DetailRecipientPage extends Component {
             anticipation,
             currentPage,
             dates,
+            disabled: loading,
+            total,
             onFilterClick: this.onDateFilter,
           }}
           configurationProps={{
