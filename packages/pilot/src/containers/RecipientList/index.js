@@ -51,6 +51,7 @@ class RecipientList extends Component {
   renderRecipientList () {
     const {
       collapseInstallmentTitle,
+      expandAllRecipients,
       expandInstallmentTitle,
       installmentTotalLabel,
       liabilitiesLabel,
@@ -70,7 +71,7 @@ class RecipientList extends Component {
         status,
         amount,
       } = recipient
-      const collapsed = notContains(index, this.state.expandedItems)
+      const collapsed = notContains(index, this.state.expandedItems) && !expandAllRecipients
       const onClick = this.handleItemExpand.bind(this, index)
       const key = `recipient_${index}`
       return (
@@ -190,6 +191,7 @@ RecipientList.propTypes = {
     amount: PropTypes.number.isRequired,
   })).isRequired,
   collapseInstallmentTitle: PropTypes.string,
+  expandAllRecipients: PropTypes.bool,
   expandInstallmentTitle: PropTypes.string,
   installmentTotalLabel: PropTypes.string,
   liabilitiesLabel: PropTypes.string,
@@ -204,6 +206,7 @@ RecipientList.propTypes = {
 
 RecipientList.defaultProps = {
   collapseInstallmentTitle: '',
+  expandAllRecipients: false,
   expandInstallmentTitle: '',
   installmentTotalLabel: '',
   liabilitiesLabel: '',

@@ -253,7 +253,9 @@ const validateReprocessFunction = (props, propName) => {
 class TransactionDetails extends Component {
   constructor (props) {
     super(props)
-
+    this.state = {
+      expandAllRecipients: false,
+    }
     this.getActions = this.getActions.bind(this)
     this.renderAlertInfo = this.renderAlertInfo.bind(this)
     this.renderBoleto = this.renderBoleto.bind(this)
@@ -261,8 +263,19 @@ class TransactionDetails extends Component {
     this.renderOutAmountSubTitle = this.renderOutAmountSubTitle.bind(this)
     this.renderPayment = this.renderPayment.bind(this)
     this.renderPaymentCard = this.renderPaymentCard.bind(this)
+    this.handleAfterPrint = this.handleAfterPrint.bind(this)
+    this.handleExport = this.handleExport.bind(this)
   }
 
+  componentDidMount () {
+    window.addEventListener('afterprint', this.handleAfterPrint)
+    window.addEventListener('beforeprint', this.handleBeforePrint)
+  }
+
+  componentWillUnmount () {
+    window.removeEventListener('afterprint', this.handleAfterPrint)
+    window.removeEventListener('beforeprint', this.handleBeforePrint)
+  }
 
   getActions () {
     const {
@@ -272,7 +285,6 @@ class TransactionDetails extends Component {
       onManualReviewRefuse,
       onManualReviewApprove,
       permissions,
-      onExport,
       onRefund,
       onReprocess,
       transaction: {
@@ -282,7 +294,7 @@ class TransactionDetails extends Component {
 
     const onExportAction = {
       icon: <DownloadIcon width={12} height={12} />,
-      onClick: onExport,
+      onClick: this.handleExport,
       title: 'Exportar',
     }
 
@@ -303,7 +315,7 @@ class TransactionDetails extends Component {
         return [
           {
             icon: <DownloadIcon witdh={12} height={12} />,
-            onClick: onExport,
+            onClick: this.handleExport,
             title: 'Exportar',
           },
           {
@@ -344,6 +356,22 @@ class TransactionDetails extends Component {
     )
 
     return detailsHeadActions(capabilities)
+  }
+
+
+  handleAfterPrint () {
+    this.setState({
+      expandAllRecipients: false,
+    })
+  }
+
+  handleExport (event) {
+    this.setState(
+      {
+        expandAllRecipients: true,
+      },
+      () => this.props.onExport(event)
+    )
   }
 
   renderAlertInfo () {
@@ -620,7 +648,7 @@ class TransactionDetails extends Component {
     }
 
     return (
-      <Grid>
+      <Grid className={style.grid}>
         <Row stretch>
           <Col
             desk={12}
@@ -748,6 +776,7 @@ class TransactionDetails extends Component {
                   >
                     <RecipientList
                       collapseInstallmentTitle={recipientsLabels.collapseInstallmentTitle}
+                      expandAllRecipients={this.state.expandAllRecipients}
                       expandInstallmentTitle={recipientsLabels.expandInstallmentTitle}
                       installmentsTableColumns={installmentColumns}
                       installmentTotalLabel={recipientsLabels.installmentTotalLabel}

@@ -9,7 +9,7 @@ import {
   CardSectionTitle,
   Table,
 } from 'former-kit'
-
+import { matchToPrint } from '../../validation/matchToMediaQuery'
 import RecipientCard from '../RecipientCard'
 import style from './style.css'
 
@@ -28,7 +28,7 @@ class RecipientSection extends PureComponent {
     this.setState({ hasError: true })
   }
 
-  renderInstallmentsTable () {
+  renderInstallmentsTable (isPrint) {
     const {
       collapsed,
       columns,
@@ -36,7 +36,7 @@ class RecipientSection extends PureComponent {
     } = this.props
     const isMultipleInstallments = installments.length >= 1
 
-    if (!collapsed || !isMultipleInstallments) {
+    if (!collapsed || !isMultipleInstallments || isPrint) {
       return (
         <Table
           columns={columns}
@@ -66,7 +66,7 @@ class RecipientSection extends PureComponent {
       totalAmount,
       totalLabel,
     } = this.props
-
+    const isPrint = matchToPrint()
     const hasInstallments = !isEmpty(installments)
 
     return (
@@ -83,7 +83,7 @@ class RecipientSection extends PureComponent {
           totalAmount={totalAmount}
           totalLabel={totalLabel}
         />
-        {hasInstallments &&
+        {hasInstallments && !isPrint &&
           <CardSection>
             {this.renderInstallmentsTable()}
             <CardSectionTitle
@@ -91,6 +91,11 @@ class RecipientSection extends PureComponent {
               title={collapsed ? collapsedTitle : title}
               onClick={onDetailsClick}
             />
+          </CardSection>
+        }
+        {hasInstallments && isPrint &&
+          <CardSection>
+            {this.renderInstallmentsTable(isPrint)}
           </CardSection>
         }
       </Fragment>
