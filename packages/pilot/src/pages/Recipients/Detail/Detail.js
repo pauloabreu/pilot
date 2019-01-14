@@ -13,9 +13,6 @@ const mockBalance = {
   onCancelRequestClick: () => {
     console.log('onCancelRequestClick')
   },
-  onPageChange: () => {
-    console.log('onPageChange')
-  },
   onWithdrawClick: () => {
     console.log('onWithdrawClick')
   },
@@ -67,6 +64,7 @@ class DetailRecipientPage extends Component {
     this.onSaveBankAccount = this.onSaveBankAccount.bind(this)
     this.onCancel = this.onCancel.bind(this)
     this.sendToAnticipationPage = this.sendToAnticipationPage.bind(this)
+    this.changeBalancePage = this.changeBalancePage.bind(this)
   }
 
   componentWillMount () {
@@ -214,14 +212,13 @@ class DetailRecipientPage extends Component {
     })
   }
 
-  filterBalanceByDate (dates) {
-    const firstPage = 1
-    this.fetchBalanceData(dates, firstPage)
-      .then((balance) => {
+  filterBalanceByDate (dates, page = 1) {
+    this.fetchBalanceData(dates, page)
+      .then((balanceData) => {
         this.setState({
-          balance,
+          balanceData,
           dates,
-          currentPage: firstPage,
+          currentPage: page,
         })
       })
   }
@@ -230,6 +227,11 @@ class DetailRecipientPage extends Component {
     const { history } = this.props
     const { id } = this.props.match.params
     history.push(`/anticipation/${id}`)
+  }
+
+  changeBalancePage (page) {
+    const { dates } = this.state
+    return this.filterBalanceByDate(dates, page)
   }
 
   fetchAccounts (document) {
@@ -267,7 +269,7 @@ class DetailRecipientPage extends Component {
   fetchBalanceData (dates, page) {
     const { client } = this.props
     const { id } = this.props.match.params
-    const query = { dates, page }
+    const query = { dates, page, count: 10 }
 
     return client.balance.data(id, query)
       .then(response => response.result)
@@ -325,6 +327,7 @@ class DetailRecipientPage extends Component {
             total: balanceTotal,
             onFilterClick: this.filterBalanceByDate,
             onAnticipationClick: this.sendToAnticipationPage,
+            onPageChange: this.changeBalancePage,
           }}
           configurationProps={{
             ...recipientData.configurationData,
