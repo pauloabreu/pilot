@@ -4,16 +4,10 @@ import { Card } from 'former-kit'
 import { translate } from 'react-i18next'
 import withRouter from 'react-router-dom/withRouter'
 import { connect } from 'react-redux'
-import { compose } from 'ramda'
+import { compose, reject, propEq } from 'ramda'
 import moment from 'moment'
 
 import DetailRecipient from '../../../../src/containers/RecipientDetails'
-
-const mockBalance = {
-  onCancelRequestClick: () => {
-    console.log('onCancelRequestClick')
-  },
-}
 
 const mapStateToProps = (state) => {
   const { account } = state
@@ -37,9 +31,8 @@ class DetailRecipientPage extends Component {
       anticipationLimit: 0,
       currentPage: 1,
       dates: {
-        // TODO: Change back to default 1 month period
-        start: moment('2017-01-01'),
-        end: moment('2019-01-01'),
+        end: moment(),
+        start: moment().subtract(1, 'months'),
       },
       total: {
         net: 0,
@@ -50,19 +43,20 @@ class DetailRecipientPage extends Component {
       loading: true,
     }
 
+    this.cancelAnticipation = this.cancelAnticipation.bind(this)
+    this.changeBalancePage = this.changeBalancePage.bind(this)
     this.fetchAccounts = this.fetchAccounts.bind(this)
-    this.fetchBalanceData = this.fetchBalanceData.bind(this)
-    this.fetchRecipientData = this.fetchRecipientData.bind(this)
     this.fetchAnticipationLimit = this.fetchAnticipationLimit.bind(this)
+    this.fetchBalanceData = this.fetchBalanceData.bind(this)
     this.fetchBalanceTotal = this.fetchBalanceTotal.bind(this)
+    this.fetchRecipientData = this.fetchRecipientData.bind(this)
     this.filterBalanceByDate = this.filterBalanceByDate.bind(this)
-    this.onSaveAnticipation = this.onSaveAnticipation.bind(this)
-    this.onSaveTransfer = this.onSaveTransfer.bind(this)
-    this.onSaveBankAccount = this.onSaveBankAccount.bind(this)
     this.onCancel = this.onCancel.bind(this)
+    this.onSaveAnticipation = this.onSaveAnticipation.bind(this)
+    this.onSaveBankAccount = this.onSaveBankAccount.bind(this)
+    this.onSaveTransfer = this.onSaveTransfer.bind(this)
     this.sendToAnticipationPage = this.sendToAnticipationPage.bind(this)
     this.sendToWithdrawPage = this.sendToWithdrawPage.bind(this)
-    this.changeBalancePage = this.changeBalancePage.bind(this)
   }
 
   componentWillMount () {
@@ -87,13 +81,23 @@ class DetailRecipientPage extends Component {
         balanceData,
         balanceTotal,
       ]) => {
+        const {
+          balance,
+          recipient,
+          requests,
+          search,
+        } = balanceData
+
         this.setState({
           ...this.state,
           anticipationLimit,
-          loading: false,
-          recipientData,
-          balanceData,
+          balance,
           balanceTotal,
+          loading: false,
+          recipient,
+          recipientData,
+          requests,
+          search,
         })
       })
       .catch((error) => {
@@ -213,10 +217,20 @@ class DetailRecipientPage extends Component {
   filterBalanceByDate (dates, page = 1) {
     this.fetchBalanceData(dates, page)
       .then((balanceData) => {
+        const {
+          balance,
+          recipient,
+          requests,
+          search,
+        } = balanceData
+
         this.setState({
-          balanceData,
-          dates,
+          balance,
           currentPage: page,
+          dates,
+          recipient,
+          requests,
+          search,
         })
       })
   }
@@ -236,6 +250,28 @@ class DetailRecipientPage extends Component {
   changeBalancePage (page) {
     const { dates } = this.state
     return this.filterBalanceByDate(dates, page)
+  }
+
+  cancelAnticipation (anticipationId) {
+    // TODO: Show confirmation modal
+    return this.props.client.bulkAnticipations.cancel({
+      recipientId: this.props.match.params.id,
+      id: anticipationId,
+    })
+      .then(({ id }) => {
+        const removeCanceled = reject(propEq('id', id))
+        const requests = removeCanceled(this.state.requests)
+        this.setState({
+          ...this.state,
+          requests,
+        })
+      })
+      .catch((error) => {
+        this.setState({
+          ...this.state,
+          error,
+        })
+      })
   }
 
   fetchAccounts (document) {
@@ -289,7 +325,10 @@ class DetailRecipientPage extends Component {
   render () {
     const {
       anticipationLimit,
-      balanceData,
+      balance,
+      recipient,
+      requests,
+      search,
       currentPage,
       dates,
       error,
@@ -317,31 +356,40 @@ class DetailRecipientPage extends Component {
       loading,
     }
 
+    const {
+      informationData,
+      configurationData,
+      companyData,
+    } = recipientData
+
     return (
       <Card>
         <DetailRecipient
-          informationProps={recipientData.informationData}
+          informationProps={informationData}
           balanceProps={{
-            ...mockBalance,
-            ...balanceData,
             anticipation,
+            balance,
             currentPage,
             dates,
             disabled: loading,
-            total: balanceTotal,
-            onFilterClick: this.filterBalanceByDate,
             onAnticipationClick: this.sendToAnticipationPage,
+            onCancelRequestClick: this.cancelAnticipation,
+            onFilterClick: this.filterBalanceByDate,
             onPageChange: this.changeBalancePage,
             onWithdrawClick: this.sendToWithdrawPage,
+            recipient,
+            requests, // FIX: Display request title correctly
+            search,
+            total: balanceTotal,
           }}
           configurationProps={{
-            ...recipientData.configurationData,
+            ...configurationData,
             onSaveAnticipation: this.onSaveAnticipation,
             onSaveTransfer: this.onSaveTransfer,
             onSaveBankAccount: this.onSaveBankAccount,
             onCancel: this.onCancel,
           }}
-          recipient={recipientData.companyData}
+          recipient={companyData}
           t={this.props.t}
         />
       </Card>
@@ -354,6 +402,9 @@ DetailRecipientPage.propTypes = {
     recipient: PropTypes.shape({
       add: PropTypes.func.isRequired,
       bankAccount: PropTypes.func.isRequired,
+    }).isRequired,
+    bulkAnticipations: PropTypes.shape({
+      cancel: PropTypes.func.isRequired,
     }).isRequired,
   }).isRequired,
   history: PropTypes.shape({
