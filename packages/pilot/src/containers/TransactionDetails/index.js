@@ -314,11 +314,6 @@ class TransactionDetails extends Component {
       if (isPendingReviewTransaction(trx) && permissions.manualReview) {
         return [
           {
-            icon: <DownloadIcon witdh={12} height={12} />,
-            onClick: this.handleExport,
-            title: 'Exportar',
-          },
-          {
             icon: <IconClearClose width={12} height={12} />,
             onClick: onManualReviewRefuse,
             title: headerLabels.refuseLabel,
