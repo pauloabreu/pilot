@@ -36,9 +36,8 @@
   margin-top: 24px;
 }
 
-
 @media print {
-
+  /* stylelint-disable */
   .recipientList {
     page-break-before: always;
   }
@@ -91,6 +90,6 @@
       }
     }
   }
+
+  /* stylelint-enable */
 }
-
-

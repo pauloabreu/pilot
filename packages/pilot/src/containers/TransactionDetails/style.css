@@ -19,6 +19,7 @@
 }
 
 @media print {
+  /* stylelint-disable */
   * {
     overflow: visible;
     position: relative;
@@ -104,4 +105,6 @@
   @page:right {
     margin: 2cm 2cm 2cm 1.5cm;
   }
+
+  /* stylelint-enable */
 }
