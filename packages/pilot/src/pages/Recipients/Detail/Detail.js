@@ -10,17 +10,11 @@ import moment from 'moment'
 import DetailRecipient from '../../../../src/containers/RecipientDetails'
 
 const mockBalance = {
-  onCancel: () => {
-    console.log('onCancel')
-  },
   onCancelRequestClick: () => {
     console.log('onCancelRequestClick')
   },
   onPageChange: () => {
     console.log('onPageChange')
-  },
-  onSave: () => {
-    console.log('onSave')
   },
   onWithdrawClick: () => {
     console.log('onWithdrawClick')
@@ -63,11 +57,11 @@ class DetailRecipientPage extends Component {
     }
 
     this.fetchAccounts = this.fetchAccounts.bind(this)
-    this.fetchBalance = this.fetchBalance.bind(this)
+    this.fetchBalanceData = this.fetchBalanceData.bind(this)
     this.fetchRecipientData = this.fetchRecipientData.bind(this)
     this.fetchAnticipationLimit = this.fetchAnticipationLimit.bind(this)
     this.fetchBalanceTotal = this.fetchBalanceTotal.bind(this)
-    this.onDateFilter = this.onDateFilter.bind(this)
+    this.filterBalanceByDate = this.filterBalanceByDate.bind(this)
     this.onSaveAnticipation = this.onSaveAnticipation.bind(this)
     this.onSaveTransfer = this.onSaveTransfer.bind(this)
     this.onSaveBankAccount = this.onSaveBankAccount.bind(this)
@@ -78,27 +72,32 @@ class DetailRecipientPage extends Component {
   componentWillMount () {
     const { dates, currentPage } = this.state
 
-    const limitPromise = this.fetchAnticipationLimit()
-    const dataPromise = this.fetchRecipientData()
-    const balancePromise = this.fetchBalance(dates, currentPage)
+    const anticipationLimitPromise = this.fetchAnticipationLimit()
+    const recipientDataPromise = this.fetchRecipientData()
+    const balanceDataPromise = this.fetchBalanceData(dates, currentPage)
     const balanceTotalPromise = this.fetchBalanceTotal(dates)
 
     const fetchPromises = [
-      dataPromise,
-      limitPromise,
-      balancePromise,
+      recipientDataPromise,
+      anticipationLimitPromise,
+      balanceDataPromise,
       balanceTotalPromise,
     ]
 
     Promise.all(fetchPromises)
-      .then(([recipientData, anticipationLimit, balance, total]) => {
+      .then(([
+        recipientData,
+        anticipationLimit,
+        balanceData,
+        balanceTotal,
+      ]) => {
         this.setState({
           ...this.state,
           anticipationLimit,
           loading: false,
           recipientData,
-          balance,
-          total,
+          balanceData,
+          balanceTotal,
         })
       })
       .catch((error) => {
@@ -106,18 +105,6 @@ class DetailRecipientPage extends Component {
           ...this.state,
           error,
           loading: false,
-        })
-      })
-  }
-
-  onDateFilter (dates) {
-    const firstPage = 1
-    this.fetchBalance(dates, firstPage)
-      .then((balance) => {
-        this.setState({
-          balance,
-          dates,
-          currentPage: firstPage,
         })
       })
   }
@@ -227,6 +214,18 @@ class DetailRecipientPage extends Component {
     })
   }
 
+  filterBalanceByDate (dates) {
+    const firstPage = 1
+    this.fetchBalanceData(dates, firstPage)
+      .then((balance) => {
+        this.setState({
+          balance,
+          dates,
+          currentPage: firstPage,
+        })
+      })
+  }
+
   sendToAnticipationPage () {
     const { history } = this.props
     const { id } = this.props.match.params
@@ -265,7 +264,7 @@ class DetailRecipientPage extends Component {
       .then(limits => limits.maximum.amount)
   }
 
-  fetchBalance (dates, page) {
+  fetchBalanceData (dates, page) {
     const { client } = this.props
     const { id } = this.props.match.params
     const query = { dates, page }
@@ -284,13 +283,13 @@ class DetailRecipientPage extends Component {
   render () {
     const {
       anticipationLimit,
-      balance,
+      balanceData,
       currentPage,
       dates,
       error,
       loading,
       recipientData,
-      total,
+      balanceTotal,
     } = this.state
 
     if (loading) {
@@ -318,13 +317,13 @@ class DetailRecipientPage extends Component {
           informationProps={recipientData.informationData}
           balanceProps={{
             ...mockBalance,
-            ...balance,
+            ...balanceData,
             anticipation,
             currentPage,
             dates,
             disabled: loading,
-            total,
-            onFilterClick: this.onDateFilter,
+            total: balanceTotal,
+            onFilterClick: this.filterBalanceByDate,
             onAnticipationClick: this.sendToAnticipationPage,
           }}
           configurationProps={{
@@ -349,7 +348,9 @@ DetailRecipientPage.propTypes = {
       bankAccount: PropTypes.func.isRequired,
     }).isRequired,
   }).isRequired,
-  history: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string.isRequired,
