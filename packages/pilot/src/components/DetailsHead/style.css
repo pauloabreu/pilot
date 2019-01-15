@@ -63,7 +63,7 @@
     align-items: baseline;
     border-bottom: 1px solid #AAAAAA; 
     justify-content: center;
-    padding: 0 0 var(--spacing-medium) 0;
+    padding: var(--spacing-small) 0 var(--spacing-small) 0;
     width: 100%;
   }
   
@@ -72,11 +72,12 @@
   }
   
   .item {
-    height: 50px;
+    height: 60px;
 
     & .identifier {
       align-items: baseline;
       font-size: 14px!important;
+      height: auto;
       justify-content: center;
     }
 
@@ -86,7 +87,7 @@
       font-size: 16px;
       font-weight: normal;
       text-align: center;    
-      width: 150px;
+      max-width: 150px;
     }
 
     & > .propertyChildren {
