@@ -59,48 +59,50 @@
 
 @media print {
   /* stylelint-disable */
-  
-  * {
-    line-height: 1!important;
-  }
-
   .content {
-    flex: 1 0 100%;
-    display: block!important;
-    width: 100%!important;
-    text-align: center!important;
-    padding: 0 0 10px 0!important;
+    width: 100%;
+    padding: 0 0 10px 0;
     border-bottom: 1px solid #AAAAAA; 
+    justify-content: center;
+    align-items: baseline;
   }
   
-  button {
-    display: none!important;
+  .actions {
+    display: none;
   }
   
   .item {
-    display: inline-block!important;
-    vertical-align: top!important;
-    
+    height: 70px;
+
     & .identifier {
-      font-size: 16px!important;
+      font-size: 14px!important;
+      justify-content: center;
+      align-items: baseline;
     }
 
     & > span {
-      display: block!important;
-      font-size: 20px!important;
-      margin-bottom: 10px!important;
+      font-size: 16px;
+      font-weight: normal;
+      color: var(--color-black);
     }
 
     & > .propertyChildren {
-      font-weight: bold!important;
-      font-size: 16px!important;
+      font-weight: bold;
+      font-size: 14px;
+      justify-content: center;
+      align-items: baseline;
 
       & abbr {
-        padding: 0!important;
-        font-size: 16px!important;
+        font-size: 14px;
+        background: none!important;
+        padding: 0;
+      }
+
+      & strong {
+        font-size: 14px;
       }
     }
   }
-
   /* stylelint-enable */
+
 }
