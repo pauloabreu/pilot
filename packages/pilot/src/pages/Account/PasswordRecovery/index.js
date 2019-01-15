@@ -58,6 +58,7 @@ class PasswordRecoveryPage extends PureComponent {
   render () {
     return (
       <PasswordRecoveryForm
+        base={this.props.base}
         errors={this.state.errors}
         loading={this.state.loading}
         onBackToLogin={this.handleBackToLogin}
@@ -69,11 +70,12 @@ class PasswordRecoveryPage extends PureComponent {
 }
 
 PasswordRecoveryPage.propTypes = {
-  t: PropTypes.func.isRequired,
+  base: PropTypes.oneOf(['dark', 'light']).isRequired,
   history: PropTypes.shape({
     push: PropTypes.func,
     replace: PropTypes.func,
   }).isRequired,
+  t: PropTypes.func.isRequired,
 }
 
 export default enhanced(PasswordRecoveryPage)

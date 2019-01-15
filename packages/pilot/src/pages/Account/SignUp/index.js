@@ -58,18 +58,25 @@ class SignUpPage extends PureComponent {
       loading,
     } = this.state
 
+    const {
+      base,
+      t,
+    } = this.props
+
     return (
       <SignUpForm
+        base={base}
         errors={buildParamErrors(error)}
         loading={loading}
         onSubmit={this.handleSubmit}
-        t={this.props.t}
+        t={t}
       />
     )
   }
 }
 
 SignUpPage.propTypes = {
+  base: PropTypes.oneOf(['dark', 'light']).isRequired,
   history: PropTypes.shape({
     push: PropTypes.func,
     replace: PropTypes.func,

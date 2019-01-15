@@ -13,6 +13,7 @@ import required from '../../../validation/required'
 const isRequired = t => required(t('sign_up.required'))
 
 const SignUpForm = ({
+  base,
   errors,
   loading,
   onSubmit,
@@ -30,24 +31,28 @@ const SignUpForm = ({
   >
     <div className={styles.signIn}>
       <FormInput
+        base={base}
         disabled={loading}
         label={t('sign_up.name')}
         name="name"
         type="text"
       />
       <FormInput
+        base={base}
         disabled={loading}
         label={t('sign_up.company')}
         name="company"
         type="text"
       />
       <FormInput
+        base={base}
         disabled={loading}
         label={t('email')}
         name="email"
         type="email"
       />
       <FormInput
+        base={base}
         disabled={loading}
         label={t('password')}
         name="password"
@@ -76,6 +81,7 @@ SignUpForm.defaultProps = {
 }
 
 SignUpForm.propTypes = {
+  base: PropTypes.oneOf(['dark', 'light']).isRequired,
   errors: PropTypes.oneOfType([
     PropTypes.shape({
       company: PropTypes.string,

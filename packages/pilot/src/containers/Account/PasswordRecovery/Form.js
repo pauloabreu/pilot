@@ -11,6 +11,7 @@ import isEmail from '../../../validation/email'
 import styles from '../style.css'
 
 const PasswordRecoveryForm = ({
+  base,
   errors,
   loading,
   onBackToLogin,
@@ -30,6 +31,7 @@ const PasswordRecoveryForm = ({
         {t('password_recovery.recovery_call')}
       </span>
       <FormInput
+        base={base}
         className={styles.input}
         disabled={loading}
         label={t('email')}
@@ -60,6 +62,7 @@ const PasswordRecoveryForm = ({
 )
 
 PasswordRecoveryForm.propTypes = {
+  base: PropTypes.oneOf(['dark', 'light']).isRequired,
   errors: PropTypes.shape({
     email: PropTypes.string,
   }),

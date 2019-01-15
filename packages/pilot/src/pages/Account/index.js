@@ -67,7 +67,7 @@ const AccountArea = ({ t, history: { location } }) => {
           />
           <Route
             path="/account/password/recovery"
-            component={PasswordRecovery}
+            component={() => <PasswordRecovery base={base} />}
           />
           <Route
             path="/account/signup/confirmation"
@@ -79,7 +79,7 @@ const AccountArea = ({ t, history: { location } }) => {
           />
           <Route
             path="/account/signup"
-            component={SignUp}
+            component={() => <SignUp base={base} />}
           />
           <Redirect to="/account/login" />
         </Switch>
