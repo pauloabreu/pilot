@@ -1,3 +1,4 @@
+@import "former-kit-skin-pagarme/dist/styles/colors/light.css";
 @import "former-kit-skin-pagarme/dist/styles/spacing.css";
 
 .statusAlert {
@@ -21,25 +22,23 @@
 @media print {
   /* stylelint-disable */
   * {
-    overflow: visible;
-    position: relative;
     background-color: #ffffff;
     font-family: Arial, Helvetica, sans-serif;
+    overflow: visible;
+    position: relative;
   }
 
   .grid {
     & * {
       box-shadow: none;
-      color: #000000;
-    }
-    & .startAlign {
+      color: var(--color-black);;
+      margin-left: 0;
       padding-left: 0;  
     }
   }
 
   .paymentInfo {
       flex-wrap: wrap;
-      display: flex!important;
       & > div:first-child {
         width: 100%;
         display: block;
@@ -78,10 +77,7 @@
 
   .transactionInfo {
     & > div {
-      flex-grow: 1;
-      flex-shrink: 0;
-      flex-basis: 150px;
-      flex: 1 0 100%;
+      width: 100%;
     }
   }
 
