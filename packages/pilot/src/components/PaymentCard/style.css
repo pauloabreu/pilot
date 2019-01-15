@@ -74,7 +74,6 @@
 }
 
 @media print {
-
   /* stylelint-disable */
   .card {
     text-align: center;
@@ -86,10 +85,12 @@
   }
 
   .cardContent {
-    flex-direction: row;
+    flex-direction: row-reverse;
+    flex-wrap: wrap;
     padding: 0 0 10px 0!important;
     border-bottom: 1px solid #AAAAAA; 
     height: auto;
+
 
     &:before {
       content: 'Dado do cartão';
@@ -98,6 +99,7 @@
       margin-bottom: 10px;
       display: block;
       width: 100%;
+      order: 1;
     }
   }
 
