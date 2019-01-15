@@ -48,6 +48,7 @@
 }
 
 @media print {
+  /* stylelint-disable */
   .riskLevelBar {
     background-image:
       linear-gradient(
@@ -59,4 +60,5 @@
       );
     height: 8px;
   }
+  /* stylelint-enable */
 }
