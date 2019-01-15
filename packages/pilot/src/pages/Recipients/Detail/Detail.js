@@ -9,6 +9,8 @@ import moment from 'moment'
 
 import DetailRecipient from '../../../../src/containers/RecipientDetails'
 import ConfirmModal from '../../../../src/components/ConfirmModal'
+import ErrorAlert from '../../../../src/components/ErrorAlert'
+import Loader from '../../../../src/components/Loader'
 
 const mapStateToProps = (state) => {
   const { account } = state
@@ -363,16 +365,11 @@ class DetailRecipientPage extends Component {
     const { t } = this.props
 
     if (loading) {
-      // TODO: Mensagem de loading
-      console.log('Loading...')
-      return null
+      return <Loader visible />
     }
 
     if (error) {
-      // TODO: Mensagem de erro
-      console.error('Erro durante fetch:')
-      console.error(error)
-      return null
+      return <ErrorAlert t={t} error={error} />
     }
 
     const anticipation = {
