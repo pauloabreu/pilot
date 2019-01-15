@@ -404,7 +404,7 @@ class DetailRecipientPage extends Component {
               onPageChange: this.changeBalancePage,
               onWithdrawClick: this.sendToWithdrawPage,
               recipient,
-              requests, // FIX: Display request title correctly
+              requests,
               search,
               total: balanceTotal,
             }}

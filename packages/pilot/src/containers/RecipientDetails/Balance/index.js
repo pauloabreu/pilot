@@ -107,13 +107,18 @@ class RecipientBalance extends Component {
     amount,
     created_at: createdAt,
     type,
+    status,
   }) {
     const { t } = this.props
-    const title = bulkAnticipationsLabels[type] || '-'
+    const { types, statuses } = bulkAnticipationsLabels
+
+    const title =
+      `${t(types[type])} ${t(statuses[status])}` || '-'
+
     return {
       amount: currencyFormatter(amount),
       created_at: dateFormatter(createdAt),
-      title: t(title),
+      title,
     }
   }
 
