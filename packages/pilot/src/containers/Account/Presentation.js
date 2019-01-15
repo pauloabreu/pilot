@@ -16,6 +16,7 @@ import styles from './style.css'
 const PresentationContainer = ({
   environmentUrl,
   environment,
+  onRegister,
   t,
 }) => (
   <div className={styles.secondaryContent}>
@@ -52,12 +53,13 @@ const PresentationContainer = ({
         <span>
           {t('landing.signup_call')}
           &nbsp;
-          <a
+          <button
             className={styles.link}
-            href="https://dashboard.pagar.me/#/signup"
+            onClick={onRegister}
+            role="link"
           >
             {t('landing.signup_action')}
-          </a>
+          </button>
         </span>
       </p>
     </div>
@@ -104,6 +106,7 @@ const PresentationContainer = ({
 PresentationContainer.propTypes = {
   environmentUrl: PropTypes.string.isRequired,
   environment: PropTypes.oneOf(['live', 'test']).isRequired,
+  onRegister: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
 }
 

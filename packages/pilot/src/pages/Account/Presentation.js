@@ -23,15 +23,25 @@ const changeEnvironmentUrl = () => (
     : testUrl
 )
 
-const PresentationPage = ({ t }) => (
-  <Presentation
-    environment={environment}
-    environmentUrl={changeEnvironmentUrl()}
-    t={t}
-  />
-)
+const PresentationPage = ({ history, t }) => {
+  const onRegister = () => history.push('/account/signup')
+
+  return (
+    <Presentation
+      environment={environment}
+      environmentUrl={changeEnvironmentUrl()}
+      onRegister={onRegister}
+      t={t}
+    />
+  )
+}
 
 PresentationPage.propTypes = {
+  history: PropTypes.shape({
+    location: PropTypes.shape({
+      pathname: PropTypes.string,
+    }),
+  }).isRequired,
   t: PropTypes.func.isRequired,
 }
 
