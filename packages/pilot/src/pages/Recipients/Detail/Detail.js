@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { Card } from 'former-kit'
 import { translate } from 'react-i18next'
@@ -8,6 +8,7 @@ import { compose, reject, propEq } from 'ramda'
 import moment from 'moment'
 
 import DetailRecipient from '../../../../src/containers/RecipientDetails'
+import ConfirmModal from '../../../../src/components/ConfirmModal'
 
 const mapStateToProps = (state) => {
   const { account } = state
@@ -41,6 +42,8 @@ class DetailRecipientPage extends Component {
       },
       error: false,
       loading: true,
+      showModal: false,
+      anticipationToCancel: null,
     }
 
     this.cancelAnticipation = this.cancelAnticipation.bind(this)
@@ -51,12 +54,14 @@ class DetailRecipientPage extends Component {
     this.fetchBalanceTotal = this.fetchBalanceTotal.bind(this)
     this.fetchRecipientData = this.fetchRecipientData.bind(this)
     this.filterBalanceByDate = this.filterBalanceByDate.bind(this)
+    this.hideCancelAnticipationModal = this.hideCancelAnticipationModal.bind(this)
     this.onCancel = this.onCancel.bind(this)
     this.onSaveAnticipation = this.onSaveAnticipation.bind(this)
     this.onSaveBankAccount = this.onSaveBankAccount.bind(this)
     this.onSaveTransfer = this.onSaveTransfer.bind(this)
     this.sendToAnticipationPage = this.sendToAnticipationPage.bind(this)
     this.sendToWithdrawPage = this.sendToWithdrawPage.bind(this)
+    this.showCancelAnticipationModal = this.showCancelAnticipationModal.bind(this)
   }
 
   componentWillMount () {
@@ -252,24 +257,41 @@ class DetailRecipientPage extends Component {
     return this.filterBalanceByDate(dates, page)
   }
 
-  cancelAnticipation (anticipationId) {
-    // TODO: Show confirmation modal
+  showCancelAnticipationModal (anticipationId) {
+    return this.setState({
+      showModal: true,
+      anticipationToCancel: anticipationId,
+    })
+  }
+
+  hideCancelAnticipationModal () {
+    return this.setState({
+      showModal: false,
+      anticipationToCancel: null,
+    })
+  }
+
+  cancelAnticipation () {
     return this.props.client.bulkAnticipations.cancel({
       recipientId: this.props.match.params.id,
-      id: anticipationId,
+      id: this.state.anticipationToCancel,
     })
       .then(({ id }) => {
         const removeCanceled = reject(propEq('id', id))
         const requests = removeCanceled(this.state.requests)
         this.setState({
           ...this.state,
+          anticipationToCancel: null,
           requests,
+          showModal: false,
         })
       })
       .catch((error) => {
         this.setState({
           ...this.state,
+          anticipationToCancel: null,
           error,
+          showModal: false,
         })
       })
   }
@@ -326,16 +348,19 @@ class DetailRecipientPage extends Component {
     const {
       anticipationLimit,
       balance,
-      recipient,
-      requests,
-      search,
+      balanceTotal,
       currentPage,
       dates,
       error,
       loading,
+      recipient,
       recipientData,
-      balanceTotal,
+      requests,
+      search,
+      showModal,
     } = this.state
+
+    const { t } = this.props
 
     if (loading) {
       // TODO: Mensagem de loading
@@ -363,36 +388,50 @@ class DetailRecipientPage extends Component {
     } = recipientData
 
     return (
-      <Card>
-        <DetailRecipient
-          informationProps={informationData}
-          balanceProps={{
-            anticipation,
-            balance,
-            currentPage,
-            dates,
-            disabled: loading,
-            onAnticipationClick: this.sendToAnticipationPage,
-            onCancelRequestClick: this.cancelAnticipation,
-            onFilterClick: this.filterBalanceByDate,
-            onPageChange: this.changeBalancePage,
-            onWithdrawClick: this.sendToWithdrawPage,
-            recipient,
-            requests, // FIX: Display request title correctly
-            search,
-            total: balanceTotal,
-          }}
-          configurationProps={{
-            ...configurationData,
-            onSaveAnticipation: this.onSaveAnticipation,
-            onSaveTransfer: this.onSaveTransfer,
-            onSaveBankAccount: this.onSaveBankAccount,
-            onCancel: this.onCancel,
-          }}
-          recipient={companyData}
-          t={this.props.t}
-        />
-      </Card>
+      <Fragment>
+        <Card>
+          <DetailRecipient
+            informationProps={informationData}
+            balanceProps={{
+              anticipation,
+              balance,
+              currentPage,
+              dates,
+              disabled: loading,
+              onAnticipationClick: this.sendToAnticipationPage,
+              onCancelRequestClick: this.showCancelAnticipationModal,
+              onFilterClick: this.filterBalanceByDate,
+              onPageChange: this.changeBalancePage,
+              onWithdrawClick: this.sendToWithdrawPage,
+              recipient,
+              requests, // FIX: Display request title correctly
+              search,
+              total: balanceTotal,
+            }}
+            configurationProps={{
+              ...configurationData,
+              onSaveAnticipation: this.onSaveAnticipation,
+              onSaveTransfer: this.onSaveTransfer,
+              onSaveBankAccount: this.onSaveBankAccount,
+              onCancel: this.onCancel,
+            }}
+            recipient={companyData}
+            t={t}
+          />
+        </Card>
+        <ConfirmModal
+          cancelText={t('cancel_pending_request_cancel')}
+          confirmText={t('cancel_pending_request_confirm')}
+          isOpen={showModal}
+          onCancel={this.hideCancelAnticipationModal}
+          onConfirm={this.cancelAnticipation}
+          title={t('cancel_pending_request_title')}
+        >
+          <div style={{ textAlign: 'center' }}>
+            {t('cancel_pending_request_text')}
+          </div>
+        </ConfirmModal>
+      </Fragment>
     )
   }
 }
