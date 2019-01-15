@@ -10,6 +10,8 @@ import {
 
 import styles from '../style.css'
 
+import isEmail from '../../../validation/email'
+
 const LoginContainer = ({
   base,
   errors,
@@ -22,6 +24,9 @@ const LoginContainer = ({
     errors={errors}
     customErrorProp="error"
     onSubmit={onLogin}
+    validation={{
+      email: isEmail(t('invalid_email')),
+    }}
   >
     <div className={styles.login}>
       <FormInput

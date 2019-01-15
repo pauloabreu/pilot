@@ -9,6 +9,7 @@ import {
 import styles from '../style.css'
 
 import required from '../../../validation/required'
+import isEmail from '../../../validation/email'
 
 const isRequired = t => required(t('sign_up.required'))
 
@@ -23,7 +24,7 @@ const SignUpForm = ({
     errors={errors}
     validation={{
       company: isRequired(t),
-      email: isRequired(t),
+      email: isEmail(t('invalid_email')),
       name: isRequired(t),
       password: isRequired(t),
     }}

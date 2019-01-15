@@ -23,7 +23,7 @@ const PasswordRecoveryForm = ({
     errors={errors}
     onSubmit={onSubmit}
     validation={{
-      email: isEmail(t('sign_up.invalid_email')),
+      email: isEmail(t('invalid_email')),
     }}
   >
     <div className={styles.login}>
