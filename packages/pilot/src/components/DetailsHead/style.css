@@ -63,7 +63,7 @@
     align-items: baseline;
     border-bottom: 1px solid #AAAAAA; 
     justify-content: center;
-    padding: 0 0 10px 0;
+    padding: 0 0 var(--spacing-medium) 0;
     width: 100%;
   }
   
@@ -72,7 +72,7 @@
   }
   
   .item {
-    height: 70px;
+    height: 50px;
 
     & .identifier {
       align-items: baseline;
@@ -82,20 +82,24 @@
 
     & > span {
       color: var(--color-black);
+      flex-wrap: wrap;
       font-size: 16px;
       font-weight: normal;
+      text-align: center;    
+      width: 150px;
     }
 
     & > .propertyChildren {
-      align-items: baseline;
       font-size: 14px;
       font-weight: bold;
+      height: auto;
       justify-content: center;
 
       & abbr {
         background: none!important;
         font-size: 14px;
         padding: 0;
+        text-transform: initial;
       }
 
       & strong {
