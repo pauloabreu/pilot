@@ -38,17 +38,15 @@
   }
 
   .paymentInfo {
-      flex-wrap: wrap;
-      & > div:first-child {
-        width: 100%;
-        display: block;
-        flex: 1 0 100%;
-      }
-      & > div {
-        flex-grow: 1;
-        flex-shrink: 0;
-        flex-basis: 150px;
-      }
+    align-items: baseline;
+    flex-direction: row-reverse;
+    flex-wrap: wrap;
+    height: 200px;
+    justify-content: center;
+
+    & > div:first-of-type {
+      width: 100%;
+    }
   }
   
   .detailsInfo {
